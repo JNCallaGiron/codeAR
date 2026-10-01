@@ -1,14 +1,19 @@
-const express = require("express");
-const path = require("path");
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const PORT = 3000;
 
-const proyectosRoutes = require("./routes/proyectosRoutes");
-const organizacionesRoutes = require("./routes/organizacionesRoutes");
-const gastosRoutes = require("./routes/gastosRoutes");
-const donacionesRoutes = require("./routes/donacionesRoutes");
-const donantesRoutes = require("./routes/donantesRoutes");
-const vistasRoutes = require("./routes/vistasRoutes");
+import proyectosRoutes from "./routes/proyectosRoutes.js";
+import organizacionesRoutes from "./routes/organizacionesRoutes.js";
+import gastosRoutes from "./routes/gastosRoutes.js";
+import donacionesRoutes from "./routes/donacionesRoutes.js";
+import donantesRoutes from "./routes/donantesRoutes.js";
+import vistasRoutes from "./routes/vistasRoutes.js";
 
 // Configuración del motor de plantillas Pug
 app.set("view engine", "pug");

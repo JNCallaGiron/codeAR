@@ -1,6 +1,10 @@
-const fs = require("fs");
-const path = require("path");
-const Organizacion = require("../models/Organizaciones");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import Organizacion from "../models/Organizaciones.js";
 
 const archivo = path.join(__dirname, "../data/organizaciones.json");
 
@@ -248,7 +252,7 @@ const eliminarOrganizacion = (req, res) => {
     }
 };
 
-module.exports = {
+export {
 
     obtenerOrganizaciones,
     obtenerOrganizacionPorId,

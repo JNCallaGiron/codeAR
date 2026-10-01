@@ -1,25 +1,18 @@
-const express = require("express");
-
-const router = express.Router();
-
-const {
+import express from "express";
+import {
     obtenerDonaciones,
     obtenerDonacionPorId,
     crearDonacion,
     actualizarDonacion,
     eliminarDonacion
-} = require("../controllers/donacionesController");
+} from "../controllers/donacionesController.js";
 
+const router = express.Router();
 
 router.get("/", obtenerDonaciones);
-
 router.get("/:id", obtenerDonacionPorId);
-
 router.post("/", crearDonacion);
-
 router.put("/:id", actualizarDonacion);
-
 router.delete("/:id", eliminarDonacion);
 
-
-module.exports = router;
+export default router;

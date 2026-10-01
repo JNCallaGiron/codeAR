@@ -7,4 +7,4 @@ class Proyectos {
         this.saldo=saldo;
     }
 }
-module.exports=Proyectos;
+export default Proyectos;

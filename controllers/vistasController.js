@@ -1,10 +1,14 @@
-const fs = require("fs");
-const path = require("path");
-const Proyecto = require("../models/Proyectos");
-const Organizacion = require("../models/Organizaciones");
-const Donante = require("../models/Donantes");
-const Donacion = require("../models/Donaciones");
-const Gasto = require("../models/Gastos");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import Proyecto from "../models/Proyectos.js";
+import Organizacion from "../models/Organizaciones.js";
+import Donante from "../models/Donantes.js";
+import Donacion from "../models/Donaciones.js";
+import Gasto from "../models/Gastos.js";
 
 const proyectosPath = path.join(__dirname, "../data/proyectos.json");
 const organizacionesPath = path.join(__dirname, "../data/organizaciones.json");
@@ -203,7 +207,7 @@ const guardarDonanteDesdeVista = (req, res) => {
     }
 };
 
-module.exports = {
+export {
     renderHome,
     renderProyectos,
     renderCrearProyecto,

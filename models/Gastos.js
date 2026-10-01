@@ -14,4 +14,4 @@ class Gasto {
     }
 }
 
-module.exports = Gasto;
+export default Gasto;

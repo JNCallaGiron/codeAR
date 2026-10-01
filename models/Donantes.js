@@ -10,4 +10,4 @@ class Donante {
         this.fecha = fecha;
     }
 }
-module.exports = Donante;
+export default Donante;

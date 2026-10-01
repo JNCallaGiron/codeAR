@@ -1,6 +1,10 @@
-const fs = require("fs");
-const path = require("path");
-const Gasto = require("../models/Gastos");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import Gasto from "../models/Gastos.js";
 
 const archivo = path.join(__dirname, "../data/gastos.json");
 
@@ -266,7 +270,7 @@ const eliminarGasto = (req, res) => {
     }
 };
 
-module.exports = {
+export {
 
     obtenerGastos,
     obtenerGastoPorId,
