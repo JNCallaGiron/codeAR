@@ -1,7 +1,11 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const Proyecto = require("../models/Proyectos");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import Proyecto from "../models/Proyectos.js";
 
 const rutaArchivo = path.join(__dirname, "../data/proyectos.json");
 
@@ -156,7 +160,7 @@ const eliminarProyecto = (req, res) => {
 };
 
 
-module.exports = {
+export {
 
     obtenerProyectos,
     obtenerProyectoPorId,

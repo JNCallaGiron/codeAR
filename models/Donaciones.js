@@ -9,4 +9,4 @@ class Donacion {
         this.idOrganizacion = idOrganizacion;
     }
 }
-module.exports = Donacion;
+export default Donacion;

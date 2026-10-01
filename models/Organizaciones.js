@@ -20,4 +20,4 @@ class Organizacion {
     }
 }
 
-module.exports = Organizacion;
+export default Organizacion;

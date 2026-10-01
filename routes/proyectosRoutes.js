@@ -1,29 +1,18 @@
-const express = require("express");
-
-const router = express.Router();
-
-const {
-
+import express from "express";
+import {
     obtenerProyectos,
     obtenerProyectoPorId,
     crearProyecto,
     actualizarProyecto,
     eliminarProyecto
+} from "../controllers/proyectosController.js";
 
-} = require("../controllers/proyectosController");
-
-    
-// rutas CRUD
+const router = express.Router();
 
 router.get("/", obtenerProyectos);
-
 router.get("/:id", obtenerProyectoPorId);
-
 router.post("/", crearProyecto);
-
 router.put("/:id", actualizarProyecto);
-
 router.delete("/:id", eliminarProyecto);
 
-
-module.exports = router;
+export default router;

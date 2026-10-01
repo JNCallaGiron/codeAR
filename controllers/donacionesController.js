@@ -1,6 +1,10 @@
-const fs = require("fs");
-const path = require("path");
-const Donacion = require("../models/Donaciones");
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import Donacion from "../models/Donaciones.js";
 
 const archivo = path.join(__dirname, "../data/donaciones.json");
 const archivoProyectos = path.join(__dirname, "../data/proyectos.json");
@@ -153,7 +157,7 @@ const eliminarDonacion = (req, res) => {
     }
 };
 
-module.exports = {
+export {
     obtenerDonaciones,
     obtenerDonacionPorId,
     crearDonacion,

@@ -1,6 +1,5 @@
-const express = require("express");
-const router = express.Router();
-const {
+import express from "express";
+import {
     renderHome,
     renderProyectos,
     renderCrearProyecto,
@@ -18,13 +17,15 @@ const {
     renderDonantes,
     renderCrearDonante,
     guardarDonanteDesdeVista
-} = require("../controllers/vistasController");
+} from "../controllers/vistasController.js";
+
+const router = express.Router();
 
 router.get("/", renderHome);
 router.get("/proyectos", renderProyectos);
 router.get("/proyectos/nuevo", renderCrearProyecto);
 router.post("/proyectos", guardarProyectoDesdeVista);
-router.get("/proyectos/:id", renderProyectoDetalle); // Ruta dinámica
+router.get("/proyectos/:id", renderProyectoDetalle);
 
 router.get("/organizaciones", renderOrganizaciones);
 router.get("/organizaciones/nuevo", renderCrearOrganizacion);
@@ -42,4 +43,4 @@ router.get("/donantes", renderDonantes);
 router.get("/donantes/nuevo", renderCrearDonante);
 router.post("/donantes", guardarDonanteDesdeVista);
 
-module.exports = router;
+export default router;

@@ -1,25 +1,18 @@
-const express = require("express");
-
-const router = express.Router();
-
-const {
+import express from "express";
+import {
     obtenerGastos,
     obtenerGastoPorId,
     crearGasto,
     actualizarGasto,
     eliminarGasto
-} = require("../controllers/gastosController");
+} from "../controllers/gastosController.js";
 
+const router = express.Router();
 
 router.get("/", obtenerGastos);
-
 router.get("/:id", obtenerGastoPorId);
-
 router.post("/", crearGasto);
-
 router.put("/:id", actualizarGasto);
-
 router.delete("/:id", eliminarGasto);
 
-
-module.exports = router;
+export default router;
