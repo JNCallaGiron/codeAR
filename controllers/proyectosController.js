@@ -1,11 +1,13 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import Proyecto from "../models/Proyectos.js";
+import mongoose from "mongoose";
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-import Proyecto from "../models/Proyectos.js";
 
 const rutaArchivo = path.join(__dirname, "../data/proyectos.json");
 
@@ -17,6 +19,16 @@ const leerProyectos = () => {
     return JSON.parse(data);
 
 };
+// función leer archivo desde MongoDB
+// const leerProyectosMdb = async () => {
+//     try {
+//         return await obtenerDatos("proyectos");
+     
+//     } catch (error) {
+//         console.error("Error al leer proyectos desde MongoDB:", error);
+//         return [];
+//     }
+// };
 
 
 // función guardar archivo
@@ -31,35 +43,30 @@ const guardarProyectos = (proyectos) => {
 
 
 // GET ALL
-const obtenerProyectos = (req, res) => {
+const  obtenerProyectos = async(req, res) => {
 
-    const proyectos = leerProyectos();
-
-    res.json(proyectos);
+    const proyectos = await leerProyectosMdb();
+    return proyectos;
 
 };
 
 
 // GET BY ID
-const obtenerProyectoPorId = (req, res) => {
+// const obtenerProyectoPorId = async(id) => {
+    
+//     const proyecto = await consultarPorId("proyectos",id);
+    
+//     if (!proyecto) {
 
-    const proyectos = leerProyectos();
+//         return res.status(404).json({
+//             mensaje: "Proyecto no encontrado"
+//         });
 
-    const id = parseInt(req.params.id);
+//     }
 
-    const proyecto = proyectos.find(p => p.idProyecto === id);
+//     res.json(proyecto);
 
-    if (!proyecto) {
-
-        return res.status(404).json({
-            mensaje: "Proyecto no encontrado"
-        });
-
-    }
-
-    res.json(proyecto);
-
-};
+// };
 
 
 // CREATE
@@ -163,7 +170,7 @@ const eliminarProyecto = (req, res) => {
 export {
 
     obtenerProyectos,
-    obtenerProyectoPorId,
+    
     crearProyecto,
     actualizarProyecto,
     eliminarProyecto

@@ -16,7 +16,6 @@ block content
             th ID Organización
             th Nombre del Proyecto
             th Descripción
-            th Saldo
             th Acción
         tbody
           each proyecto in proyectos
@@ -25,7 +24,7 @@ block content
               td= proyecto.idOrganizacion
               td= proyecto.nomProyecto || "-"
               td= proyecto.descripcion || "-"
-              td $#{proyecto.saldo || 0}
+              
               td
                 a(href=`/vistas/proyectos/${proyecto.idProyecto}`) Ver detalle
     else
