@@ -20,5 +20,8 @@ block content
         tr
           th Descripción:
           td= proyecto.descripcion || "-"
+        tr
+          th Monto: 
+          td=proyecto.saldo.monto
     else
       p Proyecto no encontrado.

@@ -1,4 +1,10 @@
 import express from "express";
+import dotenv from "dotenv";
+
+
+dotenv.config();
+
+
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -6,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3200;
 
 import proyectosRoutes from "./routes/proyectosRoutes.js";
 import organizacionesRoutes from "./routes/organizacionesRoutes.js";

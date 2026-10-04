@@ -10,19 +10,25 @@ import Donante from "../models/Donantes.js";
 import Donacion from "../models/Donaciones.js";
 import Gasto from "../models/Gastos.js";
 
+import {obtenerProyectosId, insertarProyecto, obtenerProyectos} from "../services/serviceProyecto.js";
+
+//import {obtenerProyectos} from "./proyectosController.js";
 const proyectosPath = path.join(__dirname, "../data/proyectos.json");
 const organizacionesPath = path.join(__dirname, "../data/organizaciones.json");
 const gastosPath = path.join(__dirname, "../data/gastos.json");
 const donacionesPath = path.join(__dirname, "../data/donaciones.json");
 const donantesPath = path.join(__dirname, "../data/donantes.json");
 
+
+
 const renderHome = (req, res) => {
     res.render("index", { titulo: "Panel Principal - Backend" });
 };
 
-const renderProyectos = (req, res) => {
+const renderProyectos =  async(req, res) => {
     try {
-        const proyectos = JSON.parse(fs.readFileSync(proyectosPath, "utf-8"));
+       
+        const proyectos =await obtenerProyectos();
         res.render("proyectos", { proyectos });
     } catch (error) {
         res.status(500).send("Error al cargar proyectos");
@@ -36,28 +42,27 @@ const renderCrearProyecto = (req, res) => {
 const guardarProyectoDesdeVista = (req, res) => {
     try {
         const { idOrganizacion, nomProyecto, descripcion, saldo } = req.body;
-        const proyectos = JSON.parse(fs.readFileSync(proyectosPath, "utf-8"));
+        //const proyectos = JSON.parse(fs.readFileSync(proyectosPath, "utf-8"));
+        const proyectos = obtenerProyectos();
         const nuevoId = proyectos.length > 0 ? Math.max(...proyectos.map(p => p.idProyecto)) + 1 : 1;
         const nuevoProyecto = new Proyecto(
             nuevoId,
             Number(idOrganizacion),
             nomProyecto,
             descripcion,
-            Number(saldo)
+            { monto: Number(saldo), fecha: new Date() }
         );
-        proyectos.push(nuevoProyecto);
-        fs.writeFileSync(proyectosPath, JSON.stringify(proyectos, null, 2), "utf-8");
+        insertarProyecto(nuevoProyecto);
         res.redirect("/vistas/proyectos");
     } catch (error) {
         res.status(500).send("Error al guardar el proyecto");
     }
 };
 
-const renderProyectoDetalle = (req, res) => {
+const renderProyectoDetalle = async(req, res) => {
     try {
-        const id = Number(req.params.id);
-        const proyectos = JSON.parse(fs.readFileSync(proyectosPath, "utf-8"));
-        const proyecto = proyectos.find(p => p.idProyecto === id);
+        const id = req.params.id;
+        const proyecto = await obtenerProyectosId(id);
         if (!proyecto) {
             return res.status(404).render("error", { mensaje: "Proyecto no encontrado" });
         }
