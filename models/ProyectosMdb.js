@@ -7,13 +7,15 @@ const proyectoSchema = new mongoose.Schema({
     saldo: [{
         monto:{ 
             type: Number, 
-            required: true 
+            required: false
         },
         fecha: {
             type: Date, 
-            required: true 
+            required: false 
         }
-    }]
-});
+    }],
+},  
+{ collection: 'proyectosMdbs' });
+
 
 export default mongoose.model('ProyectosMdb', proyectoSchema);

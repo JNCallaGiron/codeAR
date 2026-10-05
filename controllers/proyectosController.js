@@ -3,7 +3,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import Proyecto from "../models/Proyectos.js";
 import mongoose from "mongoose";
-
+import {obtenerProyectosId, insertarProyecto, obtenerProyectos} from "../services/serviceProyecto.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,50 +43,37 @@ const guardarProyectos = (proyectos) => {
 
 
 // GET ALL
-const  obtenerProyectos = async(req, res) => {
-
-    const proyectos = await leerProyectosMdb();
-    return proyectos;
-
+const  obtenerTodos = async(req, res) => {
+    try {
+        const proyectos = await obtenerProyectos();
+        res.json(proyectos);
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al obtener los proyectos" });
+    }
+    
+};
+// GET BY ID
+const obtenerProyectoPorId = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const proyecto = await obtenerProyectosId(id);
+        if (!proyecto) {
+            return res.status(404).json({ mensaje: "Proyecto no encontrado" });
+        }
+        return res.json(proyecto);
+    } catch (error) {
+        return res.status(500).json({ mensaje: "Error al obtener el proyecto" });
+    }
 };
 
-
-// GET BY ID
-// const obtenerProyectoPorId = async(id) => {
-    
-//     const proyecto = await consultarPorId("proyectos",id);
-    
-//     if (!proyecto) {
-
-//         return res.status(404).json({
-//             mensaje: "Proyecto no encontrado"
-//         });
-
-//     }
-
-//     res.json(proyecto);
-
-// };
-
-
 // CREATE
-const crearProyecto = (req, res) => {
-
-    const proyectos = leerProyectos();
-
-    const { idProyecto, idOrganizacion, nomProyecto, descripcion, saldo } = req.body;
-    let nuevoId = proyectos.length > 0 ? proyectos[proyectos.length - 1].idProyecto + 1 : 1;
-    const nuevoProyecto = new Proyecto(nuevoId, idOrganizacion, nomProyecto, descripcion, saldo);
-
-    proyectos.push(nuevoProyecto);
-
-    guardarProyectos(proyectos);
-
-    res.status(201).json({
-        mensaje: "Proyecto creado",
-        proyecto: nuevoProyecto
-    });
-
+const crearProyecto = async (req, res) => {
+    try {
+        const nuevoProyecto = await insertarProyecto(req.body);
+        res.status(201).json({ mensaje: "Proyecto creado exitosamente", proyecto: nuevoProyecto });
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al crear el proyecto" });
+    }
 };
 
 
@@ -168,9 +155,8 @@ const eliminarProyecto = (req, res) => {
 
 
 export {
-
-    obtenerProyectos,
-    
+    obtenerTodos, 
+    obtenerProyectoPorId,  
     crearProyecto,
     actualizarProyecto,
     eliminarProyecto
