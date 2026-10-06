@@ -3,8 +3,8 @@ import {
     obtenerTodos,
     obtenerProyectoPorId,
     crearProyecto,
-    actualizarProyecto,
-    eliminarProyecto
+    updateProyecto,
+    deleteProyecto
 } from "../controllers/proyectosController.js";
 
 const router = express.Router();
@@ -12,7 +12,7 @@ const router = express.Router();
 router.get("/", obtenerTodos);
 router.get("/:id", obtenerProyectoPorId);
 router.post("/", crearProyecto);
-// router.put("/:id", actualizarProyecto);
-// router.delete("/:id", eliminarProyecto);
+router.put("/:id", updateProyecto);
+router.delete("/:id", deleteProyecto);
 
 export default router;
