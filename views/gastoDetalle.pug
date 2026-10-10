@@ -22,6 +22,7 @@ block content
         td= gasto.fecha.toISOString().slice(0, 10)
 
     p.acciones-detalle
-      a.btn-secundario(href="/vistas/gastos") Volver al listado
       if currentUser && currentUser.role === 'admin'
         a.btn-secundario(href=`/vistas/gastos/${gasto.idGasto}/editar`) Editar
+        a.btn-peligro(href=`/vistas/gastos/${gasto.idGasto}/eliminar`) Eliminar
+      a.btn-secundario(href="/vistas/gastos") Volver al listado

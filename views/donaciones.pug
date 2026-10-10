@@ -3,17 +3,15 @@ extends layout
 block content
   fieldset
     legend Registro de Donaciones
-    p
-      a(href="/vistas") &larr; Volver al inicio
-      if currentUser && currentUser.role === 'admin'
-        | &nbsp;|&nbsp;
-        a(href="/vistas/donaciones/nuevo") + Nueva Donación
+    if currentUser && currentUser.role === 'admin'
+      p.acciones-detalle
+        a.btn-primario(href="/vistas/donaciones/nuevo") + Nueva Donación
     
     if donaciones && donaciones.length > 0
       table
         thead
           tr
-              th.num ID Donación
+              th ID Donación
               th.num Monto
               th CBU
               th Fecha
@@ -24,7 +22,7 @@ block content
         tbody
           each donacion in donaciones
             tr
-              td.num= donacion.idDonacion
+              td= donacion.idDonacion
               td.num $#{donacion.monto}
               td= donacion.cbu
               td= donacion.fecha.toISOString().slice(0, 10)

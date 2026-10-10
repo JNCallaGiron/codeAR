@@ -3,17 +3,15 @@ extends layout
 block content
   fieldset
     legend Control de Gastos
-    p
-      a(href="/vistas") &larr; Volver al inicio
-      if currentUser && currentUser.role === 'admin'
-        | &nbsp;|&nbsp;
-        a(href="/vistas/gastos/nuevo") + Nuevo Gasto
+    if currentUser && currentUser.role === 'admin'
+      p.acciones-detalle
+        a.btn-primario(href="/vistas/gastos/nuevo") + Nuevo Gasto
     
     if gastos && gastos.length > 0
       table
         thead
           tr
-            th.num ID Gasto
+            th ID Gasto
             th Proyecto
             th Descripción
             th.num Monto
@@ -22,7 +20,7 @@ block content
         tbody
           each gasto in gastos
             tr
-              td.num= gasto.idGasto
+              td= gasto.idGasto
               td= gasto.nombreProyecto || gasto.idProyecto
               td= gasto.descripcion
               td.num $#{gasto.monto}

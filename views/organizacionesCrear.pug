@@ -1,10 +1,8 @@
 extends layout
 
 block content
-  fieldset
-    legend Registrar Nueva Organización
-    p
-      a(href="/vistas/organizaciones") &larr; Volver al listado de organizaciones
+  article.formulario-card
+    h3 Registrar Nueva Organización
 
     form(action="/vistas/organizaciones" method="POST")
       div
@@ -37,4 +35,5 @@ block content
 
       .form-actions
         button.btn-secundario(type="reset") Limpiar
+        a.btn-secundario(href="/vistas/organizaciones") Cancelar
         button(type="submit") Guardar Organización

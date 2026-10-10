@@ -1,17 +1,9 @@
 extends layout
 
 block content
-  fieldset
-    legend Editar Proyecto
-    p
-      a(href="/vistas/proyectos") &larr; Volver al listado
-      | &nbsp;|&nbsp;
-      a(href=`/vistas/proyectos/${proyecto.idProyecto}`) Ver detalle
-
-    p
-      strong ID Proyecto:
-      = proyecto.idProyecto
-      |  (no editable)
+  article.formulario-card
+    h3 Editar Proyecto
+    p.subtitulo-detalle ID Proyecto: ##{proyecto.idProyecto} (solo lectura)
 
     form(action=`/vistas/proyectos/${proyecto.idProyecto}/editar` method="POST")
       div

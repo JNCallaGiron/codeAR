@@ -1,17 +1,9 @@
 extends layout
 
 block content
-  fieldset
-    legend Editar Gasto
-    p
-      a(href="/vistas/gastos") &larr; Volver al listado
-      | &nbsp;|&nbsp;
-      a(href=`/vistas/gastos/${gasto.idGasto}`) Ver detalle
-
-    p
-      strong ID Gasto:
-      = gasto.idGasto
-      |  (no editable)
+  article.formulario-card
+    h3 Editar Gasto
+    p.subtitulo-detalle ID Gasto: ##{gasto.idGasto} (solo lectura)
 
     form(action=`/vistas/gastos/${gasto.idGasto}/editar` method="POST")
       div

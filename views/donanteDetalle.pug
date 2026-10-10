@@ -31,6 +31,7 @@ block content
         td= donante.fecha.toISOString().slice(0, 10)
 
     p.acciones-detalle
-      a.btn-secundario(href="/vistas/donantes") Volver al listado
       if currentUser && currentUser.role === 'admin'
         a.btn-secundario(href=`/vistas/donantes/${donante.idDonante}/editar`) Editar
+        a.btn-peligro(href=`/vistas/donantes/${donante.idDonante}/eliminar`) Eliminar
+      a.btn-secundario(href="/vistas/donantes") Volver al listado

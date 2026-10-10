@@ -84,18 +84,41 @@ article h3 {
   color: var(--marca-principal);
 }
 
-body {
+html {
   min-height: 100vh;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
 
-main {
+main,
+main.container {
   flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 footer {
   flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  width: 100%;
+  margin: auto auto 0;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+footer p {
+  margin: 0;
 }
 
 header {
@@ -170,13 +193,8 @@ header nav .sesion {
 }
 
 footer.container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
   border-top: 1px solid var(--marca-borde);
   padding-top: 1rem;
-  margin-top: 1.5rem;
   color: var(--marca-texto-secundario);
   font-size: 0.8rem;
 }
@@ -184,7 +202,7 @@ footer.container {
 .footer-logo {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   min-width: 6rem;
   min-height: 2rem;
 }
@@ -346,6 +364,21 @@ form input[type="submit"],
   font-weight: 500;
 }
 
+form button[type="submit"]:not(.btn-peligro),
+.form-actions button[type="submit"]:not(.btn-peligro) {
+  background: var(--marca-principal);
+  border: 1px solid var(--marca-principal);
+  color: #ffffff;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+form button[type="submit"]:not(.btn-peligro):hover,
+.form-actions button[type="submit"]:not(.btn-peligro):hover {
+  background: var(--marca-principal-hover);
+  border-color: var(--marca-principal-hover);
+  color: #ffffff;
+}
+
 .btn-secundario {
   display: inline-block;
   padding: 0.4rem 1.1rem;
@@ -365,24 +398,98 @@ form input[type="submit"],
   background: rgba(24, 59, 78, 0.04);
 }
 
+/* Confirmación de baja (button.btn-peligro): bordó siempre, sin cambio al interactuar */
 .btn-peligro,
-form button.btn-peligro {
+form.form-actions button.btn-peligro {
   display: inline-block;
   padding: 0.4rem 1.1rem;
-  border: 1px solid var(--marca-error);
+  border: 1px solid #8B1E1E;
   border-radius: var(--pico-border-radius);
-  background: var(--marca-error);
-  color: #ffffff;
+  background: #8B1E1E;
+  color: #ffffff !important;
   font-size: 0.85rem;
   font-weight: 500;
   line-height: 1.5;
+  text-decoration: none !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .btn-peligro:hover,
-form button.btn-peligro:hover {
-  background: #8f1c13;
-  border-color: #8f1c13;
-  color: #ffffff;
+.btn-peligro:focus,
+form.form-actions button.btn-peligro:hover,
+form.form-actions button.btn-peligro:focus {
+  background: #6E1717;
+  border-color: #6E1717;
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+/* Enlaces Eliminar / Dar de baja en detalle: azul institucional */
+a.btn-peligro,
+a.btn-peligro:visited {
+  display: inline-block;
+  padding: 0.4rem 1.1rem;
+  border: 1px solid var(--marca-principal);
+  border-radius: var(--pico-border-radius);
+  background: var(--marca-principal);
+  color: #ffffff !important;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-decoration: none !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+a.btn-peligro:hover,
+a.btn-peligro:focus {
+  background: var(--marca-principal-hover);
+  border-color: var(--marca-principal-hover);
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+a.btn-primario,
+.btn-primario,
+a.btn-primario:visited {
+  display: inline-block;
+  padding: 0.4rem 1.1rem;
+  border: 1px solid var(--marca-principal);
+  border-radius: var(--pico-border-radius);
+  background: var(--marca-principal);
+  color: #ffffff !important;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.5;
+  text-decoration: none !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+a.btn-primario:hover,
+a.btn-primario:focus,
+.btn-primario:hover,
+.btn-primario:focus {
+  background: var(--marca-principal-hover);
+  border-color: var(--marca-principal-hover);
+  color: #ffffff !important;
+  text-decoration: none !important;
+}
+
+/* Panel principal: links de módulo estilo nav (ancho al texto) */
+.tabla-modulos td:first-child a {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--pico-border-radius);
+  color: var(--marca-texto-secundario);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  text-align: center;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.tabla-modulos td:first-child a:hover {
+  color: var(--marca-principal);
+  background: rgba(24, 59, 78, 0.06);
 }
 
 .form-actions {
@@ -401,6 +508,13 @@ form button.btn-peligro:hover {
   font-size: 0.78rem;
 }
 
+.subtitulo-detalle {
+  margin-top: -0.25rem;
+  margin-bottom: 1rem;
+  color: var(--marca-texto-secundario);
+  font-size: 0.82rem;
+}
+
 .estado-ok {
   color: var(--marca-positivo);
 }
@@ -415,7 +529,7 @@ form button.btn-peligro:hover {
 
 .tarjeta-login {
   max-width: 450px;
-  margin: 2rem auto;
+  margin: auto;
 }
 
 .tarjeta-login h3 {
@@ -478,12 +592,6 @@ form button.btn-peligro:hover {
     font-size: 0.78rem;
     padding: 0.3rem 0.35rem;
   }
-
-  footer.container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.4rem;
-  }
 }
 
 /* Header dentro de la tarjeta de login */
@@ -510,13 +618,4 @@ form button.btn-peligro:hover {
   font-size: 0.85rem;
   color: #64748B;
   margin-bottom: 0;
-}
-
-/* Footer centrado global */
-footer {
-  text-align: center;
-  margin-top: 2rem;
-  padding: 1rem 0;
-  font-size: 0.85rem;
-  color: #64748B;
 }

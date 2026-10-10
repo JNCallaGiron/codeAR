@@ -28,6 +28,7 @@ block content
         td= organizacion ? `${organizacion.nombre} (#${donacion.idOrganizacion})` : `(#${donacion.idOrganizacion})`
 
     p.acciones-detalle
-      a.btn-secundario(href="/vistas/donaciones") Volver al listado
       if currentUser && currentUser.role === 'admin'
         a.btn-secundario(href=`/vistas/donaciones/${donacion.idDonacion}/editar`) Editar
+        a.btn-peligro(href=`/vistas/donaciones/${donacion.idDonacion}/eliminar`) Eliminar
+      a.btn-secundario(href="/vistas/donaciones") Volver al listado

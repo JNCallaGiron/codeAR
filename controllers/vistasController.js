@@ -55,7 +55,7 @@ const donantesPath = path.join(__dirname, "../data/donantes.json");
 /* ===================== HOME ===================== */
 
 const renderHome = (req, res) => {
-    res.render("index", { titulo: "Panel Principal - Backend" });
+    res.render("index", { titulo: "Panel Principal | SumarImpacto" });
 };
 
 

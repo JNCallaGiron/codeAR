@@ -3,8 +3,6 @@ extends layout
 block content
   fieldset
     legend Detalle de la Organización
-    p
-      a(href="/vistas/organizaciones") &larr; Volver al listado
 
     if organizacion
       table.tabla-detalle
@@ -34,6 +32,6 @@ block content
         if currentUser && currentUser.role === 'admin'
           a.btn-secundario(href=`/vistas/organizaciones/${organizacion.idOrganizacion}/editar`) Editar
           a.btn-peligro(href=`/vistas/organizaciones/${organizacion.idOrganizacion}/eliminar`) Dar de baja
-        a(href="/vistas/organizaciones") Volver al listado
+        a.btn-secundario(href="/vistas/organizaciones") Volver al listado
     else
       p Organización no encontrada.

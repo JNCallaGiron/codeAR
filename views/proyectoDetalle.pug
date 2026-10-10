@@ -3,8 +3,6 @@ extends layout
 block content
   fieldset
     legend Detalle del Proyecto
-    p
-      a(href="/vistas/proyectos") &larr; Volver al listado
 
     if proyecto
       table.tabla-detalle
@@ -32,6 +30,6 @@ block content
         if currentUser && currentUser.role === 'admin'
           a.btn-secundario(href=`/vistas/proyectos/${proyecto.idProyecto}/editar`) Editar
           a.btn-peligro(href=`/vistas/proyectos/${proyecto.idProyecto}/eliminar`) Eliminar
-        a(href="/vistas/proyectos") Volver al listado
+        a.btn-secundario(href="/vistas/proyectos") Volver al listado
     else
       p Proyecto no encontrado.

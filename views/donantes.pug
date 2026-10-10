@@ -3,17 +3,15 @@ extends layout
 block content
   fieldset
     legend Listado de Donantes
-    p
-      a(href="/vistas") &larr; Volver al inicio
-      if currentUser && currentUser.role === 'admin'
-        | &nbsp;|&nbsp;
-        a(href="/vistas/donantes/nuevo") + Nuevo Donante
+    if currentUser && currentUser.role === 'admin'
+      p.acciones-detalle
+        a.btn-primario(href="/vistas/donantes/nuevo") + Nuevo Donante
     
     if donantes && donantes.length > 0
       table
         thead
           tr
-            th.num ID
+            th ID
             th Nombre
             th Apellido
             th.num DNI
@@ -25,14 +23,14 @@ block content
         tbody
           each donante in donantes
             tr
-              td.num= donante.idDonante
+              td= donante.idDonante
               td= donante.nombre
               td= donante.apellido
               td.num= donante.dni
               td.num= donante.telefono
               td= donante.email
               td.num $#{donante.monto}
-              td= donante.fecha
+              td= donante.fecha.toISOString().slice(0, 10)
               td.acciones
                 a(href=`/vistas/donantes/${donante.idDonante}`) Ver detalle
                 if currentUser && currentUser.role === 'admin'
