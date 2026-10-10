@@ -251,6 +251,16 @@ tbody th {
   font-weight: 600;
 }
 
+/* Listados: encabezados numéricos y de acciones alineados con sus celdas */
+thead th.num {
+  text-align: right;
+}
+
+thead th.acciones,
+td.acciones {
+  text-align: right;
+}
+
 .nowrap,
 table td:nth-child(4),
 table td:nth-child(5) {
@@ -291,6 +301,15 @@ form,
 article:has(form),
 .formulario-card {
   max-width: 620px;
+  margin: 1.5rem auto;
+}
+
+/* Tarjetas de detalle y confirmación (.tabla-detalle): ancho al contenido */
+.formulario-card:has(.tabla-detalle),
+fieldset:has(.tabla-detalle) {
+  width: fit-content;
+  min-width: 420px;
+  max-width: min(620px, 100%);
   margin: 1.5rem auto;
 }
 
@@ -449,6 +468,11 @@ form button.btn-peligro:hover {
     margin-inline: 0;
   }
 
+  .formulario-card:has(.tabla-detalle),
+  fieldset:has(.tabla-detalle) {
+    min-width: 0;
+  }
+
   table th,
   table td {
     font-size: 0.78rem;
@@ -460,4 +484,39 @@ form button.btn-peligro:hover {
     align-items: flex-start;
     gap: 0.4rem;
   }
+}
+
+/* Header dentro de la tarjeta de login */
+.tarjeta-login .login-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--pico-muted-border-color, #dce3e7);
+  padding-bottom: 1rem;
+}
+
+.tarjeta-login .login-header h2 {
+  margin-bottom: 0.25rem;
+  color: var(--marca-primario, #183B4E);
+}
+
+.tarjeta-login .subtitulo-login {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--marca-secundario, #287D70);
+  margin-bottom: 0.5rem;
+}
+
+.tarjeta-login .instruccion-login {
+  font-size: 0.85rem;
+  color: #64748B;
+  margin-bottom: 0;
+}
+
+/* Footer centrado global */
+footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1rem 0;
+  font-size: 0.85rem;
+  color: #64748B;
 }
