@@ -4,9 +4,9 @@ block content
   article.formulario-card
     h3 Detalle del Donante
 
-    table
+    table.tabla-detalle
       tr
-        th.num ID Donante
+        th ID Donante
         td.num= donante.idDonante
       tr
         th Nombre
@@ -15,16 +15,16 @@ block content
         th Apellido
         td= donante.apellido
       tr
-        th.num DNI
+        th DNI
         td.num= donante.dni
       tr
-        th.num Teléfono
+        th Teléfono
         td.num= donante.telefono
       tr
         th Email
         td= donante.email
       tr
-        th.num Monto
+        th Monto
         td.num $ #{donante.monto}
       tr
         th Fecha

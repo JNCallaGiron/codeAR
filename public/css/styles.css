@@ -239,6 +239,18 @@ tbody th {
   white-space: nowrap;
 }
 
+/* Tablas de detalle clave-valor (.tabla-detalle): etiqueta y valor a la izquierda */
+.tabla-detalle th,
+.tabla-detalle td {
+  text-align: left;
+  vertical-align: top;
+}
+
+.tabla-detalle th {
+  width: 35%;
+  font-weight: 600;
+}
+
 .nowrap,
 table td:nth-child(4),
 table td:nth-child(5) {

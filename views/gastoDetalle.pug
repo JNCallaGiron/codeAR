@@ -4,9 +4,9 @@ block content
   article.formulario-card
     h3 Detalle del Gasto
 
-    table
+    table.tabla-detalle
       tr
-        th.num ID Gasto
+        th ID Gasto
         td.num= gasto.idGasto
       tr
         th Proyecto
@@ -15,7 +15,7 @@ block content
         th Descripción
         td= gasto.descripcion
       tr
-        th.num Monto
+        th Monto
         td.num $ #{gasto.monto}
       tr
         th Fecha

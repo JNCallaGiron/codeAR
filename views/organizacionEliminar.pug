@@ -13,9 +13,9 @@ block content
       strong  La organización será dada de baja y dejará de estar activa. El registro y su historial no serán eliminados.
       |  Es una baja lógica: se conservan los proyectos y donaciones asociados.
 
-    table
+    table.tabla-detalle
       tr
-        th.num ID
+        th ID
         td.num= organizacion.idOrganizacion
       tr
         th Nombre
@@ -24,7 +24,7 @@ block content
         th Tipo
         td= organizacion.tipo
       tr
-        th.num CUIL
+        th CUIL
         td.num= organizacion.cuil
       tr
         th Responsable

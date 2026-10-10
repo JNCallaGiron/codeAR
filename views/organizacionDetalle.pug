@@ -7,7 +7,7 @@ block content
       a(href="/vistas/organizaciones") &larr; Volver al listado
 
     if organizacion
-      table
+      table.tabla-detalle
         tr
           th Nombre
           td= organizacion.nombre
@@ -15,10 +15,10 @@ block content
           th Tipo
           td= organizacion.tipo
         tr
-          th.num CUIL
+          th CUIL
           td.num= organizacion.cuil
         tr
-          th.num Teléfono
+          th Teléfono
           td.num= organizacion.telefono
         tr
           th Email

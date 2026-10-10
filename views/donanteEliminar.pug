@@ -13,9 +13,9 @@ block content
       strong  Esta acción eliminará permanentemente el donante y no podrá deshacerse
       |  (borrado físico del registro).
 
-    table
+    table.tabla-detalle
       tr
-        th.num ID Donante
+        th ID Donante
         td.num= donante.idDonante
       tr
         th Nombre
@@ -24,13 +24,13 @@ block content
         th Apellido
         td= donante.apellido
       tr
-        th.num DNI
+        th DNI
         td.num= donante.dni
       tr
         th Email
         td= donante.email
       tr
-        th.num Monto
+        th Monto
         td.num $ #{donante.monto}
       tr
         th Fecha

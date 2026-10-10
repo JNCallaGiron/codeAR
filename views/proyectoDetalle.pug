@@ -7,9 +7,9 @@ block content
       a(href="/vistas/proyectos") &larr; Volver al listado
 
     if proyecto
-      table
+      table.tabla-detalle
         tr
-          th.num ID
+          th ID
           td.num= proyecto.idProyecto
         tr
           th Organización
@@ -21,7 +21,7 @@ block content
           th Descripción
           td= proyecto.descripcion || "-"
         tr
-          th.num Saldo actual
+          th Saldo actual
           td.num
             if proyecto.saldo && proyecto.saldo.length > 0
               | $ #{proyecto.saldo[proyecto.saldo.length - 1].monto}
