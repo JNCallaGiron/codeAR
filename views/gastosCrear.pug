@@ -8,8 +8,11 @@ block content
 
     form(action="/vistas/gastos" method="POST")
       div
-        label(for="idProyecto") ID Proyecto
-        input(type="number" name="idProyecto" id="idProyecto" required)
+        label(for="idProyecto") Proyecto
+        select(name="idProyecto" id="idProyecto" required)
+          option(value="") Seleccioná un proyecto...
+          each proyecto in proyectos
+            option(value=proyecto.idProyecto)= proyecto.nomProyecto
 
       div
         label(for="descripcion") Descripción

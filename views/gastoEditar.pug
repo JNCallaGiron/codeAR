@@ -15,8 +15,11 @@ block content
 
     form(action=`/vistas/gastos/${gasto.idGasto}/editar` method="POST")
       div
-        label(for="idProyecto") ID Proyecto
-        input(type="number" name="idProyecto" id="idProyecto" value=gasto.idProyecto required)
+        label(for="idProyecto") Proyecto
+        select(name="idProyecto" id="idProyecto" required)
+          option(value="") Seleccioná un proyecto...
+          each proyecto in proyectos
+            option(value=proyecto.idProyecto selected=(proyecto.idProyecto === gasto.idProyecto))= proyecto.nomProyecto
 
       div
         label(for="descripcion") Descripción

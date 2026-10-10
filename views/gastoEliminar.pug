@@ -18,8 +18,8 @@ block content
         th.num ID Gasto
         td.num= gasto.idGasto
       tr
-        th.num ID Proyecto
-        td.num= gasto.idProyecto
+        th Proyecto
+        td= proyecto ? `${proyecto.nomProyecto} (#${gasto.idProyecto})` : `(#${gasto.idProyecto})`
       tr
         th Descripción
         td= gasto.descripcion

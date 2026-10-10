@@ -72,6 +72,18 @@
   --pico-box-shadow: none;
 }
 
+fieldset legend {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--marca-principal);
+}
+
+article h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--marca-principal);
+}
+
 body {
   min-height: 100vh;
   display: flex;
@@ -404,6 +416,11 @@ form button.btn-peligro:hover {
 }
 
 @media (max-width: 700px) {
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+
   header nav {
     justify-content: flex-start;
   }

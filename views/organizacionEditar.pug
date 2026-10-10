@@ -8,6 +8,11 @@ block content
       | &nbsp;|&nbsp;
       a(href=`/vistas/organizaciones/${organizacion.idOrganizacion}`) Ver detalle
 
+    p
+      strong ID Organización:
+      = organizacion.idOrganizacion
+      |  (no editable)
+
     form(action=`/vistas/organizaciones/${organizacion.idOrganizacion}/editar` method="POST")
       div
         label(for="nombre") Nombre de la Organización

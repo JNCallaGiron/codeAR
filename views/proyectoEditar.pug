@@ -15,8 +15,11 @@ block content
 
     form(action=`/vistas/proyectos/${proyecto.idProyecto}/editar` method="POST")
       div
-        label(for="idOrganizacion") ID de Organización
-        input(type="number" name="idOrganizacion" id="idOrganizacion" value=proyecto.idOrganizacion required)
+        label(for="idOrganizacion") Organización
+        select(name="idOrganizacion" id="idOrganizacion" required)
+          option(value="") Seleccioná una organización...
+          each org in organizaciones
+            option(value=org.idOrganizacion selected=(org.idOrganizacion === proyecto.idOrganizacion))= org.nombre
 
       div
         label(for="nomProyecto") Nombre del Proyecto

@@ -14,7 +14,7 @@ block content
         thead
           tr
             th.num ID Gasto
-            th.num Proyecto ID
+            th Proyecto
             th Descripción
             th.num Monto
             th Fecha
@@ -23,7 +23,7 @@ block content
           each gasto in gastos
             tr
               td.num= gasto.idGasto
-              td.num= gasto.idProyecto
+              td= gasto.nombreProyecto || gasto.idProyecto
               td= gasto.descripcion
               td.num $#{gasto.monto}
               td= gasto.fecha.toISOString().slice(0, 10)

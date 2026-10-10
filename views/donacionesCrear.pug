@@ -20,16 +20,25 @@ block content
         input(type="date" name="fecha" id="fecha" required)
 
       div
-        label(for="idProyecto") ID Proyecto
-        input(type="number" name="idProyecto" id="idProyecto" required)
+        label(for="idProyecto") Proyecto
+        select(name="idProyecto" id="idProyecto" required)
+          option(value="") Seleccioná un proyecto...
+          each proyecto in proyectos
+            option(value=proyecto.idProyecto)= proyecto.nomProyecto
 
       div
-        label(for="idDonante") ID Donante
-        input(type="number" name="idDonante" id="idDonante" required)
+        label(for="idDonante") Donante
+        select(name="idDonante" id="idDonante" required)
+          option(value="") Seleccioná un donante...
+          each donante in donantes
+            option(value=donante.idDonante)= `${donante.nombre} ${donante.apellido}`
 
       div
-        label(for="idOrganizacion") ID Organización
-        input(type="number" name="idOrganizacion" id="idOrganizacion" required)
+        label(for="idOrganizacion") Organización
+        select(name="idOrganizacion" id="idOrganizacion" required)
+          option(value="") Seleccioná una organización...
+          each org in organizaciones
+            option(value=org.idOrganizacion)= org.nombre
 
       .form-actions
         button.btn-secundario(type="reset") Limpiar

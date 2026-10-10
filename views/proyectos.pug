@@ -14,7 +14,7 @@ block content
         thead
           tr
             th.num ID Proyecto
-            th.num ID Organización
+            th ORGANIZACIÓN
             th Nombre del Proyecto
             th Descripción
             th Acciones
@@ -22,7 +22,7 @@ block content
           each proyecto in proyectos
             tr
               td.num= proyecto.idProyecto
-              td.num= proyecto.idOrganizacion
+              td= proyecto.nombreOrganizacion || proyecto.idOrganizacion
               td= proyecto.nomProyecto || "-"
               td= proyecto.descripcion || "-"
               td.acciones

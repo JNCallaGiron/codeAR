@@ -13,24 +13,24 @@ block content
       table
         thead
           tr
-            th.num ID Donación
-            th.num Monto
-            th CBU
-            th Fecha
-            th.num ID Proyecto
-            th.num ID Donante
-            th.num ID Organización
-            th Acciones
+              th.num ID Donación
+              th.num Monto
+              th CBU
+              th Fecha
+              th Proyecto
+              th Donante
+              th Organización
+              th Acciones
         tbody
           each donacion in donaciones
             tr
               td.num= donacion.idDonacion
               td.num $#{donacion.monto}
               td= donacion.cbu
-              td= donacion.fecha
-              td.num= donacion.idProyecto
-              td.num= donacion.idDonante
-              td.num= donacion.idOrganizacion
+              td= donacion.fecha.toISOString().slice(0, 10)
+              td= donacion.nombreProyecto || donacion.idProyecto
+              td= donacion.nombreDonante || donacion.idDonante
+              td= donacion.nombreOrganizacion || donacion.idOrganizacion
               td.acciones
                 a(href=`/vistas/donaciones/${donacion.idDonacion}`) Ver detalle
                 if currentUser && currentUser.role === 'admin'
