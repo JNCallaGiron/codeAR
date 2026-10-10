@@ -1,6 +1,3 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import {
     obtenerDonantes,
     obtenerDonantesId,
@@ -8,12 +5,6 @@ import {
     actualizarDonante,
     eliminarDonante
 } from "../services/serviceDonante.js";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Modelos (clases simples) que todavía se usan con archivos JSON
-import Donante from "../models/Donantes.js";
-import Gasto from "../models/Gastos.js";
 
 // Servicios con MongoDB
 import {
@@ -46,10 +37,6 @@ import {
     actualizarDonacion,
     eliminarDonacion
 } from "../services/serviceDonaciones.js";
-
-// Rutas de los JSON (organizaciones y proyectos ya NO se leen de acá)
-const gastosPath = path.join(__dirname, "../data/gastos.json");
-const donantesPath = path.join(__dirname, "../data/donantes.json");
 
 
 /* ===================== HOME ===================== */
@@ -537,9 +524,8 @@ const eliminarDonacionVista = async (req, res, next) => {
     }
 };
 
-const renderDonantes = async   (req, res) => {
+const renderDonantes = async (req, res) => {
     try {
-        // REEMPLAZO: En lugar de fs.readFileSync, llamamos a la función del servicio
         const donantes = await obtenerDonantes();
         res.render("donantes", { donantes });
     } catch (error) {

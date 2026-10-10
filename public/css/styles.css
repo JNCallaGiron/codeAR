@@ -398,7 +398,7 @@ form button[type="submit"]:not(.btn-peligro):hover,
   background: rgba(24, 59, 78, 0.04);
 }
 
-/* Confirmación de baja (button.btn-peligro): bordó siempre, sin cambio al interactuar */
+/* Confirmación de baja (button.btn-peligro): bordó, con hover más oscuro */
 .btn-peligro,
 form.form-actions button.btn-peligro {
   display: inline-block;
@@ -604,13 +604,13 @@ a.btn-primario:focus,
 
 .tarjeta-login .login-header h2 {
   margin-bottom: 0.25rem;
-  color: var(--marca-primario, #183B4E);
+  color: var(--marca-principal);
 }
 
 .tarjeta-login .subtitulo-login {
   font-size: 0.9rem;
   font-weight: 600;
-  color: var(--marca-secundario, #287D70);
+  color: var(--marca-positivo);
   margin-bottom: 0.5rem;
 }
 

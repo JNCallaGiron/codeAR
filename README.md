@@ -4,12 +4,12 @@ Proyecto desarrollado para la materia Desarrollo de Sistemas Web Backend (Tecnic
 
 **Esta es una versión adaptada a ECMAScript Modules (ESM / "ES6 modules")** a partir del proyecto original en CommonJS.
 
-## 🏢 Sobre la Organización
+## Sobre la Organización
 
  **SumarImpacto** es una iniciativa tecnológica concebida para actuar como nexo estratégico entre organizaciones de la sociedad civil, donantes (particulares o corporativos) y proyectos comunitarios de alto impacto social. La plataforma nace para dar respuesta a una problemática recurrente en el tercer sector: la falta de transparencia, trazabilidad y automatización en la gestión de fondos destinados a causas benéficas.
 
 
-## 👥 Integrantes y Responsabilidades (Empresa CodeAr)
+## Integrantes y Responsabilidades (Empresa CodeAr)
 
 - **Omar Virili:** Configuración del servidor Express, arquitectura y módulo de **Proyectos**.
 - **Jairo N. Calla Girón:** Módulo de **Donantes** (CRUD y persistencia en MongoDB Atlas).
@@ -29,7 +29,7 @@ Proyecto desarrollado para la materia Desarrollo de Sistemas Web Backend (Tecnic
 - Scripts de `package.json` actualizados.
 - 
 
-## ✨ Características Principales
+## Características Principales
 
 - **Gestión de Entidades:** CRUD completo para Organizaciones, Proyectos, Donantes, Donaciones y Gastos.
 - **Validaciones Integradas:** Middlewares personalizados para validar IDs, cuerpos de peticiones (`body`) y relaciones entre entidades (ej. validar existencia de Organización).
@@ -38,7 +38,7 @@ Proyecto desarrollado para la materia Desarrollo de Sistemas Web Backend (Tecnic
 - **Base de Datos Escalable:** Persistencia en MongoDB administrada a través de esquemas de Mongoose.
 
 
-### 🔐 Configuración de variables de entorno
+### Configuración de variables de entorno
 
 El proyecto utiliza variables de entorno para configurar el puerto del servidor y la conexión con MongoDB Atlas.
 
@@ -50,7 +50,7 @@ MONGO_URI=mongodb+srv://USUARIO:CONTRASEÑA@CLUSTER.mongodb.net/
 DBNAME=nombre_de_tu_base_de_datos
 ```
 
-## 🚀 Instalación y Ejecución
+## Instalación y Ejecución
 
 1. Instalar dependencias:
    ```bash
@@ -65,7 +65,7 @@ DBNAME=nombre_de_tu_base_de_datos
    npm start
    ```
 
-## 🌐 Endpoints de la API y Vistas Web
+## Endpoints de la API y Vistas Web
 - **API REST (JSON):** `/proyectos`, `/organizaciones`, `/donantes`, `/donaciones`, `/gastos`
 - **Interfaz Web (Pug):** `/vistas` (Panel principal, listados y vistas dinámicas)
 
