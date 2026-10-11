@@ -91,7 +91,8 @@ const renderCrearProyecto = async (req, res, next) => {
 
 const guardarProyectoDesdeVista = async (req, res) => {
     try {
-        const { idOrganizacion, nomProyecto, descripcion, saldo } = req.body;
+        const { nomProyecto, descripcion, saldo } = req.body;
+        const idOrganizacion = Number(req.body.idOrganizacion);
 
         // insertarProyecto calcula el idProyecto y arma el saldo inicial por su cuenta
         await insertarProyecto({ idOrganizacion, nomProyecto, descripcion, saldo });

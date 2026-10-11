@@ -62,8 +62,8 @@ async function insertarProyecto(datos) {
   if (Proyecto.db.readyState !== 1) {
     throw new Error("MongoDB no está conectado (readyState !== 1)");
   }
-  const idOrg = await existeOrganizacion(idOrganizacion);
-  if (!idOrg) {
+  const organizacionExiste = await existeOrganizacion(idOrganizacion);
+  if (!organizacionExiste) {
     const err = new Error("La organización no existe o está dada de baja");
     err.status = 400;
     throw err;
@@ -76,7 +76,7 @@ async function insertarProyecto(datos) {
   const idProyecto = ultimo ? ultimo.idProyecto + 1 : 1;
   const nuevo = await Proyecto.create({
     idProyecto,
-    idOrganizacion: Number(idOrg),
+    idOrganizacion: Number(idOrganizacion),
     nomProyecto: String(nomProyecto).trim(),
     descripcion: String(descripcion).trim(),
     saldo: [{ monto: Number(saldo) || 0, fecha: new Date() }],
