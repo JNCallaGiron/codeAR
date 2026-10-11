@@ -1,22 +1,17 @@
 extends layout
 
 block content
-  fieldset
-    legend Editar Proyecto
-    p
-      a(href="/vistas/proyectos") &larr; Volver al listado
-      | &nbsp;|&nbsp;
-      a(href=`/vistas/proyectos/${proyecto.idProyecto}`) Ver detalle
-
-    p
-      strong ID Proyecto:
-      = proyecto.idProyecto
-      |  (no editable)
+  article.formulario-card
+    h3 Editar Proyecto
+    p.subtitulo-detalle ID Proyecto: ##{proyecto.idProyecto} (solo lectura)
 
     form(action=`/vistas/proyectos/${proyecto.idProyecto}/editar` method="POST")
       div
-        label(for="idOrganizacion") ID de Organización
-        input(type="number" name="idOrganizacion" id="idOrganizacion" value=proyecto.idOrganizacion required)
+        label(for="idOrganizacion") Organización
+        select(name="idOrganizacion" id="idOrganizacion" required)
+          option(value="") Seleccioná una organización...
+          each org in organizaciones
+            option(value=org.idOrganizacion selected=(org.idOrganizacion === proyecto.idOrganizacion))= org.nombre
 
       div
         label(for="nomProyecto") Nombre del Proyecto

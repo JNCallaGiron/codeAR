@@ -1,15 +1,16 @@
 extends layout
 
 block content
-  fieldset
-    legend Registrar Nuevo Proyecto
-    p
-      a(href="/vistas/proyectos") &larr; Volver al listado de proyectos
+  article.formulario-card
+    h3 Registrar Nuevo Proyecto
 
     form(action="/vistas/proyectos" method="POST")
       div
-        label(for="idOrganizacion") ID de Organización
-        input(type="number" name="idOrganizacion" id="idOrganizacion" required)
+        label(for="idOrganizacion") Organización
+        select(name="idOrganizacion" id="idOrganizacion" required)
+          option(value="") Seleccioná una organización...
+          each org in organizaciones
+            option(value=org.idOrganizacion)= org.nombre
 
       div
         label(for="nomProyecto") Nombre del Proyecto
@@ -25,4 +26,5 @@ block content
 
       .form-actions
         button.btn-secundario(type="reset") Limpiar
+        a.btn-secundario(href="/vistas/proyectos") Cancelar
         button(type="submit") Guardar Proyecto

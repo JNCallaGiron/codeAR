@@ -1,30 +1,37 @@
 extends layout
 
 block content
-    fieldset
+  fieldset
     legend Eliminar Donación
+
     p
-        a(href="/vistas/donaciones") &larr; Volver al listado
-        | &nbsp;|&nbsp;
-        a(href=`/vistas/donaciones/${donacion.idDonacion}`) Ver detalle
+      | ¿Confirma que desea eliminar la siguiente donación?
+      strong  Esta acción eliminará permanentemente el registro y no podrá deshacerse
+      |  (borrado físico del registro).
 
-    p ¿Confirmás eliminar la siguiente donación? Esta acción no se puede deshacer.
-
-    table(border="1" cellpadding="5" cellspacing="0")
-    tr
-        th ID:
-        td= donacion.idDonacion
-    tr
-        th Monto:
-        td $#{donacion.monto}
-    tr
-        th CBU:
+    table.tabla-detalle
+      tr
+        th ID Donación
+        td.num= donacion.idDonacion
+      tr
+        th Monto
+        td.num $ #{donacion.monto}
+      tr
+        th CBU
         td= donacion.cbu
-    tr
-        th Fecha:
-        td= donacion.fecha
+      tr
+        th Fecha
+        td= donacion.fecha.toISOString().slice(0, 10)
+      tr
+        th Proyecto
+        td= proyecto ? `${proyecto.nomProyecto} (#${donacion.idProyecto})` : `(#${donacion.idProyecto})`
+      tr
+        th Donante
+        td= donante ? `${donante.nombre} ${donante.apellido} (#${donacion.idDonante})` : `(#${donacion.idDonante})`
+      tr
+        th Organización
+        td= organizacion ? `${organizacion.nombre} (#${donacion.idOrganizacion})` : `(#${donacion.idOrganizacion})`
 
-    form(action=`/vistas/donaciones/${donacion.idDonacion}/eliminar` method="POST" style="margin-top: 15px;")
-        button(type="submit") Sí, eliminar
-        | &nbsp;
-        a(href="/vistas/donaciones") Cancelar
+    form.form-actions(action=`/vistas/donaciones/${donacion.idDonacion}/eliminar` method="POST")
+      a.btn-secundario(href="/vistas/donaciones") Cancelar
+      button.btn-peligro(type="submit") Sí, eliminar

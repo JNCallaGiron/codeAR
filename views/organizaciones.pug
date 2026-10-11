@@ -3,28 +3,26 @@ extends layout
 block content
   fieldset
     legend Organizaciones Sociales Aliadas
-    p
-      a(href="/vistas") &larr; Volver al inicio
-      if currentUser && currentUser.role === 'admin'
-        | &nbsp;|&nbsp;
-        a(href="/vistas/organizaciones/nuevo") + Nueva Organización
+    if currentUser && currentUser.role === 'admin'
+      p.acciones-detalle
+        a.btn-primario(href="/vistas/organizaciones/nuevo") + Nueva Organización
     
     if organizaciones && organizaciones.length > 0
       table
         thead
           tr
-            th.num ID
+            th ID
             th Nombre
             th Tipo
             th.num CUIL
             th.num Teléfono
             th Email
             th Responsable
-            th Acciones
+            th.acciones Acciones
         tbody
           each org in organizaciones
             tr
-              td.num= org.idOrganizacion
+              td= org.idOrganizacion
               td= org.nombre
               td= org.tipo
               td.num= org.cuil

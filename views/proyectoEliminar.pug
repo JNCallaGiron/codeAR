@@ -3,23 +3,19 @@ extends layout
 block content
   fieldset
     legend Eliminar Proyecto
-    p
-      a(href="/vistas/proyectos") &larr; Volver al listado
-      | &nbsp;|&nbsp;
-      a(href=`/vistas/proyectos/${proyecto.idProyecto}`) Ver detalle
 
     p
       | ¿Confirma que desea eliminar el siguiente proyecto?
       strong  Esta acción eliminará permanentemente el proyecto y no podrá deshacerse
       |  (borrado físico del registro).
 
-    table
+    table.tabla-detalle
       tr
-        th.num ID Proyecto
+        th ID Proyecto
         td.num= proyecto.idProyecto
       tr
-        th.num ID Organización
-        td.num= proyecto.idOrganizacion
+        th Organización
+        td= organizacion ? `${organizacion.nombre} (#${proyecto.idOrganizacion})` : `(#${proyecto.idOrganizacion})`
       tr
         th Nombre
         td= proyecto.nomProyecto

@@ -1,12 +1,9 @@
 extends layout
 
 block content
-  fieldset
-    legend Editar Organización
-    p
-      a(href="/vistas/organizaciones") &larr; Volver al listado de organizaciones
-      | &nbsp;|&nbsp;
-      a(href=`/vistas/organizaciones/${organizacion.idOrganizacion}`) Ver detalle
+  article.formulario-card
+    h3 Editar Organización
+    p.subtitulo-detalle ID Organización: ##{organizacion.idOrganizacion} (solo lectura)
 
     form(action=`/vistas/organizaciones/${organizacion.idOrganizacion}/editar` method="POST")
       div

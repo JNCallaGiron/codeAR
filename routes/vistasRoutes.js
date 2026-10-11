@@ -85,11 +85,11 @@ router.get("/donaciones/nuevo", isAdmin, renderCrearDonacion);
 router.post("/donaciones", isAdmin, guardarDonacionDesdeVista);
 //router.get("/donaciones/nuevo", renderCrearDonacion);
 //router.post("/donaciones", guardarDonacionDesdeVista);
-router.get("/donaciones/:id", validarId, renderDonacionDetalle);
-router.get("/donaciones/:id/editar", validarId, renderEditarDonacion);
-router.post("/donaciones/:id/editar", validarId, guardarEdicionDonacion);
-router.get("/donaciones/:id/eliminar", validarId, renderEliminarDonacion);
-router.post("/donaciones/:id/eliminar", validarId, eliminarDonacionVista);
+router.get("/donaciones/:id", isAuthenticated, validarId, renderDonacionDetalle);
+router.get("/donaciones/:id/editar", isAdmin, validarId, renderEditarDonacion);
+router.post("/donaciones/:id/editar", isAdmin, validarId, guardarEdicionDonacion);
+router.get("/donaciones/:id/eliminar", isAdmin, validarId, renderEliminarDonacion);
+router.post("/donaciones/:id/eliminar", isAdmin, validarId, eliminarDonacionVista);
 
 router.get("/donantes", renderDonantes);
 router.get("/donantes/nuevo", isAdmin, renderCrearDonante);

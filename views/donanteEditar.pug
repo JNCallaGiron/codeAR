@@ -1,17 +1,9 @@
 extends layout
 
 block content
-  fieldset
-    legend Editar Donante
-    p
-      a(href="/vistas/donantes") &larr; Volver al listado
-      | &nbsp;|&nbsp;
-      a(href=`/vistas/donantes/${donante.idDonante}`) Ver detalle
-
-    p
-      strong ID Donante:
-      = donante.idDonante
-      |  (no editable)
+  article.formulario-card
+    h3 Editar Donante
+    p.subtitulo-detalle ID Donante: ##{donante.idDonante} (solo lectura)
 
     form(action=`/vistas/donantes/${donante.idDonante}/editar` method="POST")
       div

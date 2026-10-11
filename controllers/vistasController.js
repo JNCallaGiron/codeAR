@@ -1,6 +1,3 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import {
     obtenerDonantes,
     obtenerDonantesId,
@@ -8,12 +5,6 @@ import {
     actualizarDonante,
     eliminarDonante
 } from "../services/serviceDonante.js";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Modelos (clases simples) que todavía se usan con archivos JSON
-import Donante from "../models/Donantes.js";
-import Gasto from "../models/Gastos.js";
 
 // Servicios con MongoDB
 import {
@@ -39,16 +30,19 @@ import {
     actualizarGasto,
     eliminarGasto
 } from "../services/serviceGastos.js";
-
-// Rutas de los JSON (organizaciones y proyectos ya NO se leen de acá)
-const gastosPath = path.join(__dirname, "../data/gastos.json");
-const donantesPath = path.join(__dirname, "../data/donantes.json");
+import {
+    obtenerDonaciones,
+    obtenerDonacionPorId,
+    crearDonacion,
+    actualizarDonacion,
+    eliminarDonacion
+} from "../services/serviceDonaciones.js";
 
 
 /* ===================== HOME ===================== */
 
 const renderHome = (req, res) => {
-    res.render("index", { titulo: "Panel Principal - Backend" });
+    res.render("index", { titulo: "Panel Principal | SumarImpacto" });
 };
 
 
@@ -56,20 +50,49 @@ const renderHome = (req, res) => {
 
 const renderProyectos = async (req, res) => {
     try {
-        const proyectos = await obtenerProyectos();
-        res.render("proyectos", { proyectos });
+        const [proyectos, organizaciones] = await Promise.all([
+            obtenerProyectos(),
+            obtenerOrganizaciones({ incluirBajas: true })
+        ]);
+        const nombresOrg = new Map(organizaciones.map((o) => [o.idOrganizacion, o.nombre]));
+        const filas = proyectos.map((p) => ({
+            ...p,
+            nombreOrganizacion: nombresOrg.get(p.idOrganizacion) ?? null
+        }));
+        res.render("proyectos", { proyectos: filas });
     } catch (error) {
         res.status(500).send("Error al cargar proyectos");
     }
 };
 
-const renderCrearProyecto = (req, res) => {
-    res.render("proyectosCrear");
+// Organizaciones activas para los <select> de los formularios de proyectos.
+// En edición, si la organización actual del proyecto está dada de baja se agrega
+// igual a la lista para conservar la precarga sin romper el guardado.
+const organizacionesParaFormulario = async (idActual) => {
+    const activas = await obtenerOrganizaciones();
+    if (idActual === undefined || idActual === null) return activas;
+    const idNum = Number(idActual);
+    if (activas.some((o) => o.idOrganizacion === idNum)) return activas;
+    const todas = await obtenerOrganizaciones({ incluirBajas: true });
+    const actual = todas.find((o) => o.idOrganizacion === idNum);
+    return actual
+        ? [...activas, actual].sort((a, b) => a.idOrganizacion - b.idOrganizacion)
+        : activas;
+};
+
+const renderCrearProyecto = async (req, res, next) => {
+    try {
+        const organizaciones = await organizacionesParaFormulario();
+        res.render("proyectosCrear", { organizaciones });
+    } catch (error) {
+        next(error);
+    }
 };
 
 const guardarProyectoDesdeVista = async (req, res) => {
     try {
-        const { idOrganizacion, nomProyecto, descripcion, saldo } = req.body;
+        const { nomProyecto, descripcion, saldo } = req.body;
+        const idOrganizacion = Number(req.body.idOrganizacion);
 
         // insertarProyecto calcula el idProyecto y arma el saldo inicial por su cuenta
         await insertarProyecto({ idOrganizacion, nomProyecto, descripcion, saldo });
@@ -86,10 +109,18 @@ const guardarProyectoDesdeVista = async (req, res) => {
 const renderProyectoDetalle = async (req, res, next) => {
     try {
         const proyecto = await obtenerProyectosId(req.params.id);
-        res.render("proyectoDetalle", { proyecto });
+        const organizacion = await organizacionDelProyecto(proyecto);
+        res.render("proyectoDetalle", { proyecto, organizacion });
     } catch (error) {
         next(mapearProyectoNoEncontrado(error));
     }
+};
+
+// Organización de un proyecto, incluidas las dadas de baja (para no perder
+// el nombre en detalle/baja aunque el registro ya no esté activo).
+const organizacionDelProyecto = async (proyecto) => {
+    const organizaciones = await obtenerOrganizaciones({ incluirBajas: true });
+    return organizaciones.find((o) => o.idOrganizacion === proyecto.idOrganizacion) ?? null;
 };
 
 // obtenerProyectosId lanza un Error simple sin status: acá lo convertimos en 404 real
@@ -102,7 +133,8 @@ const mapearProyectoNoEncontrado = (error) =>
 const renderEditarProyecto = async (req, res, next) => {
     try {
         const proyecto = await obtenerProyectosId(req.params.id);
-        res.render("proyectoEditar", { proyecto });
+        const organizaciones = await organizacionesParaFormulario(proyecto.idOrganizacion);
+        res.render("proyectoEditar", { proyecto, organizaciones });
     } catch (error) {
         next(mapearProyectoNoEncontrado(error));
     }
@@ -124,7 +156,8 @@ const guardarEdicionProyecto = async (req, res, next) => {
 const renderEliminarProyecto = async (req, res, next) => {
     try {
         const proyecto = await obtenerProyectosId(req.params.id);
-        res.render("proyectoEliminar", { proyecto });
+        const organizacion = await organizacionDelProyecto(proyecto);
+        res.render("proyectoEliminar", { proyecto, organizacion });
     } catch (error) {
         next(mapearProyectoNoEncontrado(error));
     }
@@ -246,14 +279,24 @@ const eliminarOrganizacionVista = async (req, res, next) => {
 
 const renderGastos = async (req, res) => {
     try {
-        const gastos = await obtenerGastos() ;
-        res.render("gastos", { gastos });
+        const [gastos, proyectos] = await Promise.all([obtenerGastos(), obtenerProyectos()]);
+        const nombresProyecto = new Map(proyectos.map((p) => [p.idProyecto, p.nomProyecto]));
+        const filas = gastos.map((g) => ({
+            ...g,
+            nombreProyecto: nombresProyecto.get(g.idProyecto) ?? null
+        }));
+        res.render("gastos", { gastos: filas });
     } catch (error) {
         res.status(500).send("Error al cargar gastos");
     }
 };
-const renderCrearGasto = (req, res) => {
-    res.render("gastosCrear");
+const renderCrearGasto = async (req, res, next) => {
+    try {
+        const proyectos = await obtenerProyectos();
+        res.render("gastosCrear", { proyectos });
+    } catch (error) {
+        next(error);
+    }
 };
 
 const guardarGastoDesdeVista = async (req, res) => {
@@ -277,17 +320,25 @@ const renderGastoDetalle = async (req, res, next) => {
     try {
         const gasto = await obtenerGastoPorId(req.params.id);
         if (!gasto) throw gastoNoEncontrado();
-        res.render("gastoDetalle", { gasto });
+        const proyecto = await proyectoDelGasto(gasto);
+        res.render("gastoDetalle", { gasto, proyecto });
     } catch (error) {
         next(error);
     }
+};
+
+// Proyecto de un gasto (sólo activos: el servicio de gastos valida ese mismo conjunto).
+const proyectoDelGasto = async (gasto) => {
+    const proyectos = await obtenerProyectos();
+    return proyectos.find((p) => p.idProyecto === gasto.idProyecto) ?? null;
 };
 
 const renderGastoEditar = async (req, res, next) => {
     try {
         const gasto = await obtenerGastoPorId(req.params.id);
         if (!gasto) throw gastoNoEncontrado();
-        res.render("gastoEditar", { gasto });
+        const proyectos = await obtenerProyectos();
+        res.render("gastoEditar", { gasto, proyectos });
     } catch (error) {
         next(error);
     }
@@ -314,7 +365,8 @@ const renderGastoEliminar = async (req, res, next) => {
     try {
         const gasto = await obtenerGastoPorId(req.params.id);
         if (!gasto) throw gastoNoEncontrado();
-        res.render("gastoEliminar", { gasto });
+        const proyecto = await proyectoDelGasto(gasto);
+        res.render("gastoEliminar", { gasto, proyecto });
     } catch (error) {
         next(error);
     }
@@ -336,15 +388,38 @@ const eliminarGastoVista = async (req, res, next) => {
 
 const renderDonaciones = async (req, res) => {
     try {
-        const donaciones = await obtenerDonaciones();
-        res.render("donaciones", { donaciones });
+        const [donaciones, proyectos, donantes, organizaciones] = await Promise.all([
+            obtenerDonaciones(),
+            obtenerProyectos(),
+            obtenerDonantes(),
+            obtenerOrganizaciones({ incluirBajas: true })
+        ]);
+        const nombresProyecto = new Map(proyectos.map((p) => [p.idProyecto, p.nomProyecto]));
+        const nombresDonante = new Map(donantes.map((d) => [d.idDonante, `${d.nombre} ${d.apellido}`]));
+        const nombresOrg = new Map(organizaciones.map((o) => [o.idOrganizacion, o.nombre]));
+        const filas = donaciones.map((d) => ({
+            ...d,
+            nombreProyecto: nombresProyecto.get(d.idProyecto) ?? null,
+            nombreDonante: nombresDonante.get(d.idDonante) ?? null,
+            nombreOrganizacion: nombresOrg.get(d.idOrganizacion) ?? null
+        }));
+        res.render("donaciones", { donaciones: filas });
     } catch (error) {
         res.status(500).send("Error al cargar donaciones");
     }
 };
 
-const renderCrearDonacion = (req, res) => {
-    res.render("donacionesCrear");
+const renderCrearDonacion = async (req, res, next) => {
+    try {
+        const [proyectos, donantes, organizaciones] = await Promise.all([
+            obtenerProyectos(),
+            obtenerDonantes(),
+            obtenerOrganizaciones()
+        ]);
+        res.render("donacionesCrear", { proyectos, donantes, organizaciones });
+    } catch (error) {
+        next(error);
+    }
 };
 
 const guardarDonacionDesdeVista = async (req, res) => {
@@ -373,17 +448,39 @@ const renderDonacionDetalle = async (req, res, next) => {
     try {
         const donacion = await obtenerDonacionPorId(req.params.id);
         if (!donacion) throw donacionNoEncontrada();
-        res.render("donacionDetalle", { donacion });
+        const relaciones = await relacionesDeDonacion(donacion);
+        res.render("donacionDetalle", { donacion, ...relaciones });
     } catch (error) {
         next(error);
     }
+};
+
+// Proyecto, donante y organización de una donación. Las organizaciones se
+// traen incluyendo bajas para conservar el nombre; si no existe el registro
+// la vista cae en el fallback "#(id)".
+const relacionesDeDonacion = async (donacion) => {
+    const [proyectos, donantes, organizaciones] = await Promise.all([
+        obtenerProyectos(),
+        obtenerDonantes(),
+        obtenerOrganizaciones({ incluirBajas: true })
+    ]);
+    return {
+        proyecto: proyectos.find((p) => p.idProyecto === donacion.idProyecto) ?? null,
+        donante: donantes.find((d) => d.idDonante === donacion.idDonante) ?? null,
+        organizacion: organizaciones.find((o) => o.idOrganizacion === donacion.idOrganizacion) ?? null
+    };
 };
 
 const renderEditarDonacion = async (req, res, next) => {
     try {
         const donacion = await obtenerDonacionPorId(req.params.id);
         if (!donacion) throw donacionNoEncontrada();
-        res.render("donacionEditar", { donacion });
+        const [proyectos, donantes, organizaciones] = await Promise.all([
+            obtenerProyectos(),
+            obtenerDonantes(),
+            obtenerOrganizaciones()
+        ]);
+        res.render("donacionEditar", { donacion, proyectos, donantes, organizaciones });
     } catch (error) {
         next(error);
     }
@@ -411,7 +508,8 @@ const renderEliminarDonacion = async (req, res, next) => {
     try {
         const donacion = await obtenerDonacionPorId(req.params.id);
         if (!donacion) throw donacionNoEncontrada();
-        res.render("donacionEliminar", { donacion });
+        const relaciones = await relacionesDeDonacion(donacion);
+        res.render("donacionEliminar", { donacion, ...relaciones });
     } catch (error) {
         next(error);
     }
@@ -427,9 +525,8 @@ const eliminarDonacionVista = async (req, res, next) => {
     }
 };
 
-const renderDonantes = async   (req, res) => {
+const renderDonantes = async (req, res) => {
     try {
-        // REEMPLAZO: En lugar de fs.readFileSync, llamamos a la función del servicio
         const donantes = await obtenerDonantes();
         res.render("donantes", { donantes });
     } catch (error) {

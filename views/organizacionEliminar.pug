@@ -3,19 +3,15 @@ extends layout
 block content
   fieldset
     legend Dar de Baja Organización
-    p
-      a(href="/vistas/organizaciones") &larr; Volver al listado
-      | &nbsp;|&nbsp;
-      a(href=`/vistas/organizaciones/${organizacion.idOrganizacion}`) Ver detalle
 
     p
       | ¿Confirma dar de baja la siguiente organización?
       strong  La organización será dada de baja y dejará de estar activa. El registro y su historial no serán eliminados.
       |  Es una baja lógica: se conservan los proyectos y donaciones asociados.
 
-    table
+    table.tabla-detalle
       tr
-        th.num ID
+        th ID
         td.num= organizacion.idOrganizacion
       tr
         th Nombre
@@ -24,7 +20,7 @@ block content
         th Tipo
         td= organizacion.tipo
       tr
-        th.num CUIL
+        th CUIL
         td.num= organizacion.cuil
       tr
         th Responsable

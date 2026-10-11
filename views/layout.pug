@@ -6,7 +6,8 @@ html(lang="es" data-theme="light")
     link(rel="preconnect" href="https://fonts.googleapis.com")
     link(rel="preconnect" href="https://fonts.gstatic.com" crossorigin)
     link(rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap")
-    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css")
+    link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2.1.1/css/pico.min.css")
+    link(rel="icon" type="image/svg+xml" href="/img/favicon.svg")
     link(rel="stylesheet" href="/css/styles.css")
     title= titulo || "SumarImpacto | Trazabilidad End-to-End"
   body
@@ -40,5 +41,6 @@ html(lang="es" data-theme="light")
     main.container
       block content
     footer.container
-      p SumarImpacto &copy; 2026. Desarrollado por CodeAr para SumarImpacto.
-      .footer-logo(aria-label="codeAr")
+      p SumarImpacto &copy; 2026. Desarrollado por 
+      .footer-logo
+        img(src="/img/codear-logo.svg" alt="codeAr")

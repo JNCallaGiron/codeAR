@@ -99,7 +99,7 @@ app.use("/vistas", isAuthenticated, vistasRoutes);
 
 // Ruta principal
 app.get("/", isAuthenticated, (req, res) => {
-    res.render("index", { titulo: "SumarImpacto - Panel Principal" });
+    res.render("index", { titulo: "Panel Principal | SumarImpacto" });
 });
 
 // Middlewares finales: ruta inexistente (404) y manejo central de errores.

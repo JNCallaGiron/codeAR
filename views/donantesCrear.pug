@@ -1,10 +1,8 @@
 extends layout
 
 block content
-  fieldset
-    legend Registrar Nuevo Donante
-    p
-      a(href="/vistas/donantes") &larr; Volver al listado de donantes
+  article.formulario-card
+    h3 Registrar Nuevo Donante
 
     form(action="/vistas/donantes" method="POST")
       div
@@ -37,4 +35,5 @@ block content
 
       .form-actions
         button.btn-secundario(type="reset") Limpiar
+        a.btn-secundario(href="/vistas/donantes") Cancelar
         button(type="submit") Guardar Donante

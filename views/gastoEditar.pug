@@ -1,22 +1,17 @@
 extends layout
 
 block content
-  fieldset
-    legend Editar Gasto
-    p
-      a(href="/vistas/gastos") &larr; Volver al listado
-      | &nbsp;|&nbsp;
-      a(href=`/vistas/gastos/${gasto.idGasto}`) Ver detalle
-
-    p
-      strong ID Gasto:
-      = gasto.idGasto
-      |  (no editable)
+  article.formulario-card
+    h3 Editar Gasto
+    p.subtitulo-detalle ID Gasto: ##{gasto.idGasto} (solo lectura)
 
     form(action=`/vistas/gastos/${gasto.idGasto}/editar` method="POST")
       div
-        label(for="idProyecto") ID Proyecto
-        input(type="number" name="idProyecto" id="idProyecto" value=gasto.idProyecto required)
+        label(for="idProyecto") Proyecto
+        select(name="idProyecto" id="idProyecto" required)
+          option(value="") Seleccioná un proyecto...
+          each proyecto in proyectos
+            option(value=proyecto.idProyecto selected=(proyecto.idProyecto === gasto.idProyecto))= proyecto.nomProyecto
 
       div
         label(for="descripcion") Descripción

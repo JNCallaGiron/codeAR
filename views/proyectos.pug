@@ -3,26 +3,24 @@ extends layout
 block content
   fieldset
     legend Listado de Proyectos
-    p
-      a(href="/vistas") &larr; Volver al inicio
-      if currentUser && currentUser.role === 'admin'
-        | &nbsp;|&nbsp;
-        a(href="/vistas/proyectos/nuevo") + Nuevo Proyecto
+    if currentUser && currentUser.role === 'admin'
+      p.acciones-detalle
+        a.btn-primario(href="/vistas/proyectos/nuevo") + Nuevo Proyecto
     
     if proyectos && proyectos.length > 0
       table
         thead
           tr
-            th.num ID Proyecto
-            th.num ID Organización
+            th ID Proyecto
+            th ORGANIZACIÓN
             th Nombre del Proyecto
             th Descripción
-            th Acciones
+            th.acciones Acciones
         tbody
           each proyecto in proyectos
             tr
-              td.num= proyecto.idProyecto
-              td.num= proyecto.idOrganizacion
+              td= proyecto.idProyecto
+              td= proyecto.nombreOrganizacion || proyecto.idOrganizacion
               td= proyecto.nomProyecto || "-"
               td= proyecto.descripcion || "-"
               td.acciones

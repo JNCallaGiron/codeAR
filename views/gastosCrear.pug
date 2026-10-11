@@ -1,15 +1,16 @@
 extends layout
 
 block content
-  fieldset
-    legend Registrar Nuevo Gasto
-    p
-      a(href="/vistas/gastos") &larr; Volver al listado de gastos
+  article.formulario-card
+    h3 Registrar Nuevo Gasto
 
     form(action="/vistas/gastos" method="POST")
       div
-        label(for="idProyecto") ID Proyecto
-        input(type="number" name="idProyecto" id="idProyecto" required)
+        label(for="idProyecto") Proyecto
+        select(name="idProyecto" id="idProyecto" required)
+          option(value="") Seleccioná un proyecto...
+          each proyecto in proyectos
+            option(value=proyecto.idProyecto)= proyecto.nomProyecto
 
       div
         label(for="descripcion") Descripción
@@ -25,4 +26,5 @@ block content
 
       .form-actions
         button.btn-secundario(type="reset") Limpiar
+        a.btn-secundario(href="/vistas/gastos") Cancelar
         button(type="submit") Guardar Gasto
