@@ -1,6 +1,6 @@
 import { connectDB } from "../config/db.js";
 import mongoose from "mongoose";
-import Donante from "../models/DonantesMdb.js";
+import Donante from "../models/Donantes.js";;
 
 // Servicio para obtener todos los donantes desde la base de datos MongoDB
 async function obtenerDonantes() {
