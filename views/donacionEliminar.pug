@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  fieldset
+    legend Eliminar Donación
+
+    p
+      | ¿Confirma que desea eliminar la siguiente donación?
+      strong  Esta acción eliminará permanentemente el registro y no podrá deshacerse
+      |  (borrado físico del registro).
+
+    table.tabla-detalle
+      tr
+        th ID Donación
+        td.num= donacion.idDonacion
+      tr
+        th Monto
+        td.num $ #{donacion.monto}
+      tr
+        th CBU
+        td= donacion.cbu
+      tr
+        th Fecha
+        td= donacion.fecha.toISOString().slice(0, 10)
+      tr
+        th Proyecto
+        td= proyecto ? `${proyecto.nomProyecto} (#${donacion.idProyecto})` : `(#${donacion.idProyecto})`
+      tr
+        th Donante
+        td= donante ? `${donante.nombre} ${donante.apellido} (#${donacion.idDonante})` : `(#${donacion.idDonante})`
+      tr
+        th Organización
+        td= organizacion ? `${organizacion.nombre} (#${donacion.idOrganizacion})` : `(#${donacion.idOrganizacion})`
+
+    form.form-actions(action=`/vistas/donaciones/${donacion.idDonacion}/eliminar` method="POST")
+      a.btn-secundario(href="/vistas/donaciones") Cancelar
+      button.btn-peligro(type="submit") Sí, eliminar
