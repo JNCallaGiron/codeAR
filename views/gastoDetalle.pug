@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  article.formulario-card
+    h3 Detalle del Gasto
+
+    table.tabla-detalle
+      tr
+        th ID Gasto
+        td.num= gasto.idGasto
+      tr
+        th Proyecto
+        td= proyecto ? `${proyecto.nomProyecto} (#${gasto.idProyecto})` : `(#${gasto.idProyecto})`
+      tr
+        th Descripción
+        td= gasto.descripcion
+      tr
+        th Monto
+        td.num $ #{gasto.monto}
+      tr
+        th Fecha
+        td= gasto.fecha.toISOString().slice(0, 10)
+
+    p.acciones-detalle
+      if currentUser && currentUser.role === 'admin'
+        a.btn-secundario(href=`/vistas/gastos/${gasto.idGasto}/editar`) Editar
+        a.btn-peligro(href=`/vistas/gastos/${gasto.idGasto}/eliminar`) Eliminar
+      a.btn-secundario(href="/vistas/gastos") Volver al listado

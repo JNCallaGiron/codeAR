@@ -1,25 +1,22 @@
-const express = require("express");
-
-const router = express.Router();
-
-const {
+import express from "express";
+import {
     obtenerGastos,
     obtenerGastoPorId,
     crearGasto,
     actualizarGasto,
     eliminarGasto
-} = require("../controllers/gastosController");
+} from "../controllers/gastosController.js";
+import { isAdmin } from "../middlewares/auth.js";
+import { validarId } from "../middlewares/validarId.js";
+import { validarBody } from "../middlewares/validarBody.js";
+import { validarGasto } from "../middlewares/validarGasto.js";
 
+const router = express.Router();
 
 router.get("/", obtenerGastos);
+router.get("/:id", validarId, obtenerGastoPorId);
+router.post("/", isAdmin, validarBody, validarGasto, crearGasto);
+router.put("/:id", isAdmin, validarId, validarBody, validarGasto, actualizarGasto);
+router.delete("/:id", isAdmin, validarId, eliminarGasto);
 
-router.get("/:id", obtenerGastoPorId);
-
-router.post("/", crearGasto);
-
-router.put("/:id", actualizarGasto);
-
-router.delete("/:id", eliminarGasto);
-
-
-module.exports = router;
+export default router;

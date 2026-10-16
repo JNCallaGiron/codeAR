@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  fieldset
+    legend Eliminar Proyecto
+
+    p
+      | ¿Confirma que desea eliminar el siguiente proyecto?
+      strong  Esta acción eliminará permanentemente el proyecto y no podrá deshacerse
+      |  (borrado físico del registro).
+
+    table.tabla-detalle
+      tr
+        th ID Proyecto
+        td.num= proyecto.idProyecto
+      tr
+        th Organización
+        td= organizacion ? `${organizacion.nombre} (#${proyecto.idOrganizacion})` : `(#${proyecto.idOrganizacion})`
+      tr
+        th Nombre
+        td= proyecto.nomProyecto
+      tr
+        th Descripción
+        td= proyecto.descripcion || "-"
+
+    form.form-actions(action=`/vistas/proyectos/${proyecto.idProyecto}/eliminar` method="POST")
+      a.btn-secundario(href="/vistas/proyectos") Cancelar
+      button.btn-peligro(type="submit") Sí, eliminar

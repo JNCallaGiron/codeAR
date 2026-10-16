@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  article.formulario-card
+    h3 Editar Proyecto
+    p.subtitulo-detalle ID Proyecto: ##{proyecto.idProyecto} (solo lectura)
+
+    form(action=`/vistas/proyectos/${proyecto.idProyecto}/editar` method="POST")
+      div
+        label(for="idOrganizacion") Organización
+        select(name="idOrganizacion" id="idOrganizacion" required)
+          option(value="") Seleccioná una organización...
+          each org in organizaciones
+            option(value=org.idOrganizacion selected=(org.idOrganizacion === proyecto.idOrganizacion))= org.nombre
+
+      div
+        label(for="nomProyecto") Nombre del Proyecto
+        input(type="text" name="nomProyecto" id="nomProyecto" value=proyecto.nomProyecto required)
+
+      div
+        label(for="descripcion") Descripción
+        textarea(name="descripcion" id="descripcion" rows="4" required)= proyecto.descripcion
+
+      div
+        label(for="saldo") Nuevo Saldo ($)
+        input(type="number" step="0.01" name="saldo" id="saldo")
+        small.ayuda Opcional: dejarlo vacío para conservar el saldo actual. Si se informa un monto, reemplaza el historial de saldo por ese único movimiento.
+
+      .form-actions
+        a.btn-secundario(href="/vistas/proyectos") Cancelar
+        button(type="submit") Guardar Cambios

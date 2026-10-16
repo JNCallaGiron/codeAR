@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  article.formulario-card
+    h3 Detalle del Donante
+
+    table.tabla-detalle
+      tr
+        th ID Donante
+        td.num= donante.idDonante
+      tr
+        th Nombre
+        td= donante.nombre
+      tr
+        th Apellido
+        td= donante.apellido
+      tr
+        th DNI
+        td.num= donante.dni
+      tr
+        th Teléfono
+        td.num= donante.telefono
+      tr
+        th Email
+        td= donante.email
+      tr
+        th Monto
+        td.num $ #{donante.monto}
+      tr
+        th Fecha
+        td= donante.fecha.toISOString().slice(0, 10)
+
+    p.acciones-detalle
+      if currentUser && currentUser.role === 'admin'
+        a.btn-secundario(href=`/vistas/donantes/${donante.idDonante}/editar`) Editar
+        a.btn-peligro(href=`/vistas/donantes/${donante.idDonante}/eliminar`) Eliminar
+      a.btn-secundario(href="/vistas/donantes") Volver al listado

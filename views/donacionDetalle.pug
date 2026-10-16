@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  article.formulario-card
+    h3 Detalle de la Donación
+
+    table.tabla-detalle
+      tr
+        th ID Donación
+        td.num= donacion.idDonacion
+      tr
+        th Monto
+        td.num $ #{donacion.monto}
+      tr
+        th CBU
+        td= donacion.cbu
+      tr
+        th Fecha
+        td= donacion.fecha.toISOString().slice(0, 10)
+      tr
+        th Proyecto
+        td= proyecto ? `${proyecto.nomProyecto} (#${donacion.idProyecto})` : `(#${donacion.idProyecto})`
+      tr
+        th Donante
+        td= donante ? `${donante.nombre} ${donante.apellido} (#${donacion.idDonante})` : `(#${donacion.idDonante})`
+      tr
+        th Organización
+        td= organizacion ? `${organizacion.nombre} (#${donacion.idOrganizacion})` : `(#${donacion.idOrganizacion})`
+
+    p.acciones-detalle
+      if currentUser && currentUser.role === 'admin'
+        a.btn-secundario(href=`/vistas/donaciones/${donacion.idDonacion}/editar`) Editar
+        a.btn-peligro(href=`/vistas/donaciones/${donacion.idDonacion}/eliminar`) Eliminar
+      a.btn-secundario(href="/vistas/donaciones") Volver al listado
