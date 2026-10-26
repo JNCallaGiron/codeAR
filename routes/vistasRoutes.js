@@ -17,6 +17,8 @@ import {
     guardarEdicionOrganizacion,
     renderEliminarOrganizacion,
     eliminarOrganizacionVista,
+    renderReactivarOrganizacion,
+    reactivarOrganizacionVista,
     renderGastos,
     renderCrearGasto,
     guardarGastoDesdeVista,
@@ -43,6 +45,7 @@ import {
     eliminarDonanteVista
 } from "../controllers/vistasController.js";
 import { validarId } from "../middlewares/validarId.js";
+import { validarObjectId } from "../middlewares/validarObjectId.js";
 import { isAdmin, isAuthenticated } from "../middlewares/auth.js";
 
 const router = express.Router();
@@ -59,15 +62,17 @@ router.post("/proyectos/:id/editar", isAdmin, validarId, guardarEdicionProyecto)
 router.get("/proyectos/:id/eliminar", isAdmin, validarId, renderEliminarProyecto);
 router.post("/proyectos/:id/eliminar", isAdmin, validarId, eliminarProyectoVista);
 
-// ORGANIZACIONES (IDs numéricos: idOrganizacion, eliminar = baja lógica)
+// ORGANIZACIONES (se identifican por el _id de MongoDB (:_id); eliminar = baja lógica, reactivar la revierte)
 router.get("/organizaciones", renderOrganizaciones);
 router.get("/organizaciones/nuevo", isAdmin, renderCrearOrganizacion);
 router.post("/organizaciones", isAdmin, guardarOrganizacionDesdeVista);
-router.get("/organizaciones/:id", renderOrganizacionDetalle);
-router.get("/organizaciones/:id/editar", isAdmin, validarId, renderEditarOrganizacion);
-router.post("/organizaciones/:id/editar", isAdmin, validarId, guardarEdicionOrganizacion);
-router.get("/organizaciones/:id/eliminar", isAdmin, validarId, renderEliminarOrganizacion);
-router.post("/organizaciones/:id/eliminar", isAdmin, validarId, eliminarOrganizacionVista);
+router.get("/organizaciones/:_id", validarObjectId, renderOrganizacionDetalle);
+router.get("/organizaciones/:_id/editar", isAdmin, validarObjectId, renderEditarOrganizacion);
+router.post("/organizaciones/:_id/editar", isAdmin, validarObjectId, guardarEdicionOrganizacion);
+router.get("/organizaciones/:_id/eliminar", isAdmin, validarObjectId, renderEliminarOrganizacion);
+router.post("/organizaciones/:_id/eliminar", isAdmin, validarObjectId, eliminarOrganizacionVista);
+router.get("/organizaciones/:_id/reactivar", isAdmin, validarObjectId, renderReactivarOrganizacion);
+router.post("/organizaciones/:_id/reactivar", isAdmin, validarObjectId, reactivarOrganizacionVista);
 
 router.get("/gastos", renderGastos);
 router.get("/gastos/nuevo", isAdmin, renderCrearGasto);

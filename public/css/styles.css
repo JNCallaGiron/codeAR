@@ -619,3 +619,30 @@ a.btn-primario:focus,
   color: #64748B;
   margin-bottom: 0;
 }
+
+/* Organizaciones: filas dadas de baja y etiquetas de estado */
+tr.fila-baja td {
+  color: #6b7280;
+  background: #f3f4f6;
+}
+
+.estado-baja,
+.estado-activa {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.estado-baja {
+  background: #f8e3e3;
+  color: #8B1E1E;
+}
+
+.estado-activa {
+  background: #e3f4e8;
+  color: #1f6b3a;
+}
+
