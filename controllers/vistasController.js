@@ -19,9 +19,10 @@ import {
     crearOrganizacion,
     obtenerOrganizacionPorId,
     actualizarOrganizacion,
-    darDeBajaOrganizacion
+    darDeBajaOrganizacion,
+    reactivarOrganizacion
 } from "../services/serviceOrganizacion.js";
-import { validarDatosOrganizacion } from "../utils/validacionesOrganizacion.js";
+import { validarDatosOrganizacion } from "../middlewares/validaciones.js";
 import { AppError } from "../utils/AppError.js";
 import {
     obtenerGastos,
@@ -174,14 +175,18 @@ const eliminarProyectoVista = async (req, res, next) => {
     }
 };
 
-
 /* ===================== ORGANIZACIONES (MongoDB) ===================== */
+// Todas las vistas de organizaciones identifican el registro por su _id de MongoDB (req.params._id).
+
+const esAdmin = (res) => res.locals.currentUser?.role === "admin";
 
 const renderOrganizaciones = async (req, res) => {
     try {
-        // Solo organizaciones activas (las dadas de baja lógica no se muestran)
-        const organizaciones = await obtenerOrganizaciones();
-        res.render("organizaciones", { organizaciones });
+        // Por defecto solo activas. Un admin puede pedir ver también las dadas de baja
+        // (?incluirBajas=true) para poder reactivarlas desde el listado.
+        const incluirBajas = req.query.incluirBajas === "true" && esAdmin(res);
+        const organizaciones = await obtenerOrganizaciones({ incluirBajas });
+        res.render("organizaciones", { organizaciones, incluirBajas });
     } catch (error) {
         res.status(500).send("Error al cargar organizaciones");
     }
@@ -191,19 +196,31 @@ const renderCrearOrganizacion = (req, res) => {
     res.render("organizacionesCrear");
 };
 
+// Si el error del servicio corresponde a un campo del formulario, devuelve el nombre de ese campo.
+// Hoy el único caso es el CUIL repetido (409). El formulario lo muestra como globito del navegador
+// sobre ese campo; cualquier otro error va a la pantalla de error.
+const campoDelError = (error) =>
+    error instanceof AppError && error.status === 409 && /CUIL/i.test(error.message) ? "cuil" : null;
+
 const guardarOrganizacionDesdeVista = async (req, res) => {
     try {
         // Mismas validaciones que usa la API
-        const { errores, datos } = validarDatosOrganizacion(req.body);
+        const { errores, datos, erroresPorCampo } = validarDatosOrganizacion(req.body);
         if (errores.length > 0) {
-            return res.status(400).render("error", { mensaje: errores.join(" | ") });
+            // Vuelve al mismo formulario con lo que ya se había escrito; cada error aparece como
+            // globito del navegador sobre su campo
+            return res.status(400).render("organizacionesCrear", { erroresCampo: erroresPorCampo, valores: req.body });
         }
 
-        // Asigna idOrganizacion, controla CUIL duplicado y guarda en Mongo
+        // Controla CUIL duplicado y guarda en Mongo (MongoDB genera el _id)
         await crearOrganizacion(datos);
 
         res.redirect("/vistas/organizaciones");
     } catch (error) {
+        const campo = campoDelError(error);
+        if (campo) {
+            return res.status(error.status).render("organizacionesCrear", { erroresCampo: { [campo]: error.message }, valores: req.body });
+        }
         if (error instanceof AppError) {
             return res.status(error.status).render("error", { mensaje: error.message });
         }
@@ -212,14 +229,14 @@ const guardarOrganizacionDesdeVista = async (req, res) => {
     }
 };
 
-/* ============ ORGANIZACIONES: detalle / edición / baja lógica (vistas) ============ */
+/* ============ ORGANIZACIONES: detalle / edición / baja lógica / reactivación (vistas) ============ */
 
-// Devuelve null si la organización no existe o está dada de baja (baja lógica)
 const organizacionNoEncontrada = () => new AppError(404, "Organización no encontrada");
 
+// El detalle también muestra las organizaciones dadas de baja (para poder reactivarlas)
 const renderOrganizacionDetalle = async (req, res, next) => {
     try {
-        const organizacion = await obtenerOrganizacionPorId(req.params.id);
+        const organizacion = await obtenerOrganizacionPorId(req.params._id, { incluirBajas: true });
         if (!organizacion) throw organizacionNoEncontrada();
         res.render("organizacionDetalle", { organizacion });
     } catch (error) {
@@ -227,9 +244,10 @@ const renderOrganizacionDetalle = async (req, res, next) => {
     }
 };
 
+// Devuelve null si la organización no existe o está dada de baja (baja lógica)
 const renderEditarOrganizacion = async (req, res, next) => {
     try {
-        const organizacion = await obtenerOrganizacionPorId(req.params.id);
+        const organizacion = await obtenerOrganizacionPorId(req.params._id);
         if (!organizacion) throw organizacionNoEncontrada();
         res.render("organizacionEditar", { organizacion });
     } catch (error) {
@@ -240,22 +258,36 @@ const renderEditarOrganizacion = async (req, res, next) => {
 const guardarEdicionOrganizacion = async (req, res, next) => {
     try {
         // Mismas validaciones que la API y que la creación desde la vista
-        const { errores, datos } = validarDatosOrganizacion(req.body);
-        if (errores.length > 0) throw new AppError(400, errores.join(" | "));
+        const { errores, datos, erroresPorCampo } = validarDatosOrganizacion(req.body);
+        if (errores.length > 0) {
+            // Vuelve al mismo formulario de edición con lo que se había escrito; cada error aparece
+            // como globito del navegador sobre su campo
+            return res.status(400).render("organizacionEditar", {
+                organizacion: { ...req.body, _id: req.params._id },
+                erroresCampo: erroresPorCampo
+            });
+        }
 
         // actualiza solo organizaciones activas; null = no existe o dada de baja
-        const organizacion = await actualizarOrganizacion(req.params.id, datos);
+        const organizacion = await actualizarOrganizacion(req.params._id, datos);
         if (!organizacion) throw organizacionNoEncontrada();
 
         res.redirect("/vistas/organizaciones");
     } catch (error) {
+        const campo = campoDelError(error);
+        if (campo) {
+            return res.status(error.status).render("organizacionEditar", {
+                organizacion: { ...req.body, _id: req.params._id },
+                erroresCampo: { [campo]: error.message }
+            });
+        }
         next(error);
     }
 };
 
 const renderEliminarOrganizacion = async (req, res, next) => {
     try {
-        const organizacion = await obtenerOrganizacionPorId(req.params.id);
+        const organizacion = await obtenerOrganizacionPorId(req.params._id);
         if (!organizacion) throw organizacionNoEncontrada();
         res.render("organizacionEliminar", { organizacion });
     } catch (error) {
@@ -266,7 +298,7 @@ const renderEliminarOrganizacion = async (req, res, next) => {
 // BAJA LÓGICA: no borra el documento, lo marca como inactiva (serviceOrganizacion.js)
 const eliminarOrganizacionVista = async (req, res, next) => {
     try {
-        const baja = await darDeBajaOrganizacion(Number(req.params.id));
+        const baja = await darDeBajaOrganizacion(req.params._id);
         if (!baja) throw organizacionNoEncontrada();
         res.redirect("/vistas/organizaciones");
     } catch (error) {
@@ -274,6 +306,28 @@ const eliminarOrganizacionVista = async (req, res, next) => {
     }
 };
 
+// REACTIVACIÓN: pantalla de confirmación (solo para organizaciones dadas de baja)
+const renderReactivarOrganizacion = async (req, res, next) => {
+    try {
+        const organizacion = await obtenerOrganizacionPorId(req.params._id, { incluirBajas: true });
+        if (!organizacion) throw organizacionNoEncontrada();
+        if (organizacion.activa !== false) throw new AppError(409, "La organización ya está activa");
+        res.render("organizacionReactivar", { organizacion });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// Revierte la baja lógica (activa = true, fechaBaja = null) y vuelve al listado
+const reactivarOrganizacionVista = async (req, res, next) => {
+    try {
+        const reactivada = await reactivarOrganizacion(req.params._id);
+        if (!reactivada) throw organizacionNoEncontrada();
+        res.redirect("/vistas/organizaciones");
+    } catch (error) {
+        next(error);
+    }
+};
 
 /* ===================== GASTOS (MongoDB) ===================== */
 
@@ -626,6 +680,8 @@ export {
     guardarEdicionOrganizacion,
     renderEliminarOrganizacion,
     eliminarOrganizacionVista,
+    renderReactivarOrganizacion,
+    reactivarOrganizacionVista,
     renderGastos,
     renderCrearGasto,
     guardarGastoDesdeVista,
