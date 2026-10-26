@@ -30,8 +30,8 @@ block content
 
       p.acciones-detalle
         if currentUser && currentUser.role === 'admin'
-          a.btn-secundario(href=`/vistas/organizaciones/${organizacion.idOrganizacion}/editar`) Editar
-          a.btn-peligro(href=`/vistas/organizaciones/${organizacion.idOrganizacion}/eliminar`) Dar de baja
+          a.btn-secundario(href=`/vistas/organizaciones/${organizacion._id}/editar`) Editar
+          a.btn-peligro(href=`/vistas/organizaciones/${organizacion._id}/eliminar`) Dar de baja
         a.btn-secundario(href="/vistas/organizaciones") Volver al listado
     else
       p Organización no encontrada.

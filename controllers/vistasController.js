@@ -74,9 +74,9 @@ const organizacionesParaFormulario = async (idActual) => {
     const idNum = Number(idActual);
     if (activas.some((o) => o.idOrganizacion === idNum)) return activas;
     const todas = await obtenerOrganizaciones({ incluirBajas: true });
-    const actual = todas.find((o) => o.idOrganizacion === idNum);
+    const actual = todas.find((o) => o._id === idNum);
     return actual
-        ? [...activas, actual].sort((a, b) => a.idOrganizacion - b.idOrganizacion)
+        ? [...activas, actual].sort((a, b) => a._id - b._id)
         : activas;
 };
 
@@ -91,10 +91,11 @@ const renderCrearProyecto = async (req, res, next) => {
 
 const guardarProyectoDesdeVista = async (req, res) => {
     try {
-        const { nomProyecto, descripcion, saldo } = req.body;
-        const idOrganizacion = Number(req.body.idOrganizacion);
+        const {idOrganizacion, nomProyecto, descripcion, saldo } = req.body;
+       // const idOrganizacion = Number(req.body.idOrganizacion);
 
         // insertarProyecto calcula el idProyecto y arma el saldo inicial por su cuenta
+        console.log(req.body)
         await insertarProyecto({ idOrganizacion, nomProyecto, descripcion, saldo });
 
         res.redirect("/vistas/proyectos");
@@ -219,8 +220,10 @@ const organizacionNoEncontrada = () => new AppError(404, "Organización no encon
 
 const renderOrganizacionDetalle = async (req, res, next) => {
     try {
+    
         const organizacion = await obtenerOrganizacionPorId(req.params.id);
         if (!organizacion) throw organizacionNoEncontrada();
+        console.log(organizacion)
         res.render("organizacionDetalle", { organizacion });
     } catch (error) {
         next(error);

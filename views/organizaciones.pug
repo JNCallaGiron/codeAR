@@ -22,7 +22,7 @@ block content
         tbody
           each org in organizaciones
             tr
-              td= org.idOrganizacion
+              td= org._id
               td= org.nombre
               td= org.tipo
               td.num= org.cuil
@@ -30,9 +30,9 @@ block content
               td= org.mail
               td= org.responsable
               td.acciones
-                a(href=`/vistas/organizaciones/${org.idOrganizacion}`) Ver detalle
+                a(href=`/vistas/organizaciones/${org._id}`) Ver detalle
                 if currentUser && currentUser.role === 'admin'
-                  a(href=`/vistas/organizaciones/${org.idOrganizacion}/editar`) Editar
-                  a(href=`/vistas/organizaciones/${org.idOrganizacion}/eliminar`) Dar de baja
+                  a(href=`/vistas/organizaciones/${org._id}/editar`) Editar
+                  a(href=`/vistas/organizaciones/${org._id}/eliminar`) Dar de baja
     else
       p No hay organizaciones registradas.

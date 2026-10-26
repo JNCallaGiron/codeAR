@@ -39,16 +39,16 @@ async function detectarCuilDuplicado(error, cuil, idPropio = null) {
 
 async function obtenerOrganizaciones({ incluirBajas = false } = {}) {
   const filtro = incluirBajas ? {} : SOLO_ACTIVAS;
-  return Organizacion.find(filtro).select("-_id").sort({ idOrganizacion: 1 }).lean();
+  return Organizacion.find(filtro).sort({ nombre: 1 }).lean();
 }
 
 async function obtenerOrganizacionPorId(id) {
-  return Organizacion.findOne({ idOrganizacion: Number(id), ...SOLO_ACTIVAS }).select("-_id").lean();
+    return Organizacion.findById({_id:id, ...SOLO_ACTIVAS }).lean();
 }
 
 // Para que otros módulos (ej. Donaciones) validen que una organización existe y está activa
 async function existeOrganizacion(id) {
-  return (await Organizacion.exists({ idOrganizacion: Number(id), ...SOLO_ACTIVAS })) !== null;
+  return (await Organizacion.exists({ _id: Number(id), ...SOLO_ACTIVAS })) !== null;
 }
 
 async function crearOrganizacion(datos) {
@@ -58,18 +58,17 @@ async function crearOrganizacion(datos) {
   // idOrganizacion = último + 1 (contando también las dadas de baja, para no reutilizar ids).
   // Si dos requests chocan en el mismo id, el índice único lo rechaza (11000) y se reintenta.
   for (let intento = 1; ; intento++) {
-    const ultima = await Organizacion.findOne().sort({ idOrganizacion: -1 }).select("idOrganizacion").lean();
-    const idOrganizacion = ultima ? ultima.idOrganizacion + 1 : 1;
+   // const ultima = await Organizacion.findOne().sort({ idOrganizacion: -1 }).select("idOrganizacion").lean();
+    //const idOrganizacion = ultima ? ultima.idOrganizacion + 1 : 1;
 
     try {
-      const nueva = await Organizacion.create({ ...datos, idOrganizacion });
+      const nueva = await Organizacion.create({ ...datos });
+      console.log(`datos nuevos ${nueva}`);
       return nueva.toJSON();
     } catch (error) {
       const duplicado = await detectarCuilDuplicado(error, datos.cuil);
       if (duplicado) throw errorCuilDuplicado(duplicado);
 
-      if (error.code === 11000 && intento < MAX_INTENTOS_ID) continue; // choque de id
-      throw error;
     }
   }
 }

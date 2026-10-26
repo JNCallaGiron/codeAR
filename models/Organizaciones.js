@@ -26,8 +26,9 @@ const texto = (campo, etiqueta) => ({
 const organizacionSchema = new mongoose.Schema(
   {
     // Clave de negocio numérica: la usan Proyectos y Donaciones (idOrganizacion)
-    idOrganizacion: { type: Number, required: true, unique: true, min: 1 },
-    nombre: texto("nombre", "El nombre"),
+   // idOrganizacion: { type: Number, required: true, unique: true, min: 1 },
+   
+   nombre: texto("nombre", "El nombre"),
     tipo: texto("tipo", "El tipo"),
     cuil: {
       type: String,

@@ -63,7 +63,7 @@ router.post("/proyectos/:id/eliminar", isAdmin, validarId, eliminarProyectoVista
 router.get("/organizaciones", renderOrganizaciones);
 router.get("/organizaciones/nuevo", isAdmin, renderCrearOrganizacion);
 router.post("/organizaciones", isAdmin, guardarOrganizacionDesdeVista);
-router.get("/organizaciones/:id", validarId, renderOrganizacionDetalle);
+router.get("/organizaciones/:id", renderOrganizacionDetalle);
 router.get("/organizaciones/:id/editar", isAdmin, validarId, renderEditarOrganizacion);
 router.post("/organizaciones/:id/editar", isAdmin, validarId, guardarEdicionOrganizacion);
 router.get("/organizaciones/:id/eliminar", isAdmin, validarId, renderEliminarOrganizacion);
