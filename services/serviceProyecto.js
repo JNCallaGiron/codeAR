@@ -1,7 +1,7 @@
 import { connectDB } from "../config/db.js";
 import mongoose from "mongoose";
 import Proyecto from "../models/Proyectos.js";
-import { existeOrganizacion } from "./serviceOrganizacion.js";
+import { obtenerOrganizacionPorId } from "./serviceOrganizacion.js";
 
 const SOLO_ACTIVAS = { activa: { $ne: false } };
 //Servicio para obtener un proyecto por su ID desde la base de datos MongoDB
@@ -28,7 +28,7 @@ async function proyectosBorrados(){
 //Servicio para obtener un proyecto por su ID desde la base de datos MongoDB
 async function obtenerProyectosId(id) {
   try {
-    const proyecto = await Proyecto.findOne({ idProyecto: Number(id) });
+    const proyecto = await Proyecto.findById();
     if (!proyecto) {
       throw new Error("Proyecto no encontrado");
     }
@@ -45,7 +45,7 @@ async function obtenerProyectosId(id) {
 //funcion para insertar datos en la base de datos y se manda por parametro la tabla y los datos a insertar
 async function insertarProyecto(datos) {
   const { idOrganizacion, nomProyecto, descripcion, saldo } = datos;
-
+  
   if (!idOrganizacion || !nomProyecto || !descripcion) {
     const err = new Error("Faltan campos obligatorios");
     err.status = 400;
@@ -62,25 +62,23 @@ async function insertarProyecto(datos) {
   if (Proyecto.db.readyState !== 1) {
     throw new Error("MongoDB no está conectado (readyState !== 1)");
   }
-  const organizacionExiste = await existeOrganizacion(idOrganizacion);
+  const organizacionExiste = await obtenerOrganizacionPorId(idOrganizacion);
   if (!organizacionExiste) {
     const err = new Error("La organización no existe o está dada de baja");
     err.status = 400;
     throw err;
   }
-  const ultimo = await Proyecto.findOne()
-    .sort({ idProyecto: -1 })
-    .select("idProyecto")
-    .lean();
+  console.log(datos)
 
-  const idProyecto = ultimo ? ultimo.idProyecto + 1 : 1;
+ // const idProyecto = ultimo ? ultimo.idProyecto + 1 : 1;
   const nuevo = await Proyecto.create({
-    idProyecto,
-    idOrganizacion: Number(idOrganizacion),
+    //idProyecto,
+    idOrganizacion: String(idOrganizacion),
     nomProyecto: String(nomProyecto).trim(),
     descripcion: String(descripcion).trim(),
     saldo: [{ monto: Number(saldo) || 0, fecha: new Date() }],
   });
+ 
   return nuevo.toObject();
 }
 
